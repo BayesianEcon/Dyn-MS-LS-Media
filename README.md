@@ -28,7 +28,7 @@ interface for invoking C++ scripts within R.
 Before running the following scripts, make sure that your version of R is updated (at least v. 2020-10-10)
 and to run the script JASA_Preliminary_01_InstallPackages.R inside the folder "01-Preliminaries" to
 install all the required packages. Make also sure to change the working directory to your path whenever 
-It is clearly stated:
+it is clearly stated:
 
 
 ########CHANGE YOUR PATH ###########
