@@ -12,7 +12,10 @@ DATE:        May 2023
 
 Tested on R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
 
-
+-------------------------------------------------------------------------------
+The following Repository contains the files (scripts and data) used to reproduce 
+the results of the paper "Media Bias and Polarization through the Lens of a Markov 
+Switching Latent Space Network Model".
 -------------------------------------------------------------------------------
 
         %%%%%%%%%%%%%% PRELIMINARIES  %%%%%%%%%%%%%%
