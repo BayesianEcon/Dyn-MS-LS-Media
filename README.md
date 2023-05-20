@@ -330,17 +330,4 @@ Node i and node j at time t for t = 1:Time
 An illustrative sample is available following the path Data/TextAnalysis-SlantIndex/Italy
 
 -------------------------------------------------------------------------------
-
-         %%%%%%%%%%%%%%  R Package  %%%%%%%%%%%%%%
-
--------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
 ```
