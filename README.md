@@ -28,7 +28,7 @@ interface for invoking C++ scripts within R.
 Before running the following scripts, make sure that your version of R is updated (at least v. 2020-10-10)
 and to run the script JASA_Preliminary_01_InstallPackages.R inside the folder "01-Preliminaries" to
 install all the required packages. Make also sure to change the working directory to your path whenever 
-it is clearly stated:
+It is clearly stated:
 
 
 ########CHANGE YOUR PATH ###########
@@ -330,4 +330,17 @@ Node i and node j at time t for t = 1:Time
 An illustrative sample is available following the path Data/TextAnalysis-SlantIndex/Italy
 
 -------------------------------------------------------------------------------
+
+         %%%%%%%%%%%%%%  R Package  %%%%%%%%%%%%%%
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 ```

@@ -182,8 +182,6 @@ rg_eq = 0
 
 Iterations<- 20000
 
-library(MSLSMediaBiasR)
-
 start_time <- Sys.time()  
 
 result = MCMC(princ_w = EL_princ$w, #edge weights from the network triangle dataset
