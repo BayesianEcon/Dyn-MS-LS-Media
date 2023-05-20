@@ -6,9 +6,6 @@
 #include <string>
 #include <list>
 
-// [[Rcpp::depends(RcppParallel)]]
-#include <RcppParallel.h>
-
 #include <RcppDist.h>
 #include <RcppArmadillo.h>
 

@@ -7,7 +7,7 @@ new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"
 if(length(new.packages)) install.packages(new.packages)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Documents/GitHub/Dyn-MS-LS-Media/")
 #####################################
 
 library(data.table)
@@ -16,7 +16,6 @@ library(Rcpp)
 library(RcppDist)
 library(RcppParallel)
 library(RcppArmadillo)
-library(data.table)
 ############## Synthetic Data Generation #######################
 
 source("Code/04-Simulation/JASA_Simulation_01_dgp.R")
@@ -182,6 +181,8 @@ rg_eq = 0
 ## expected running time  12.29215 mins on MacBook Air M2
 
 Iterations<- 20000
+
+library(MSLSMediaBiasR)
 
 start_time <- Sys.time()  
 
