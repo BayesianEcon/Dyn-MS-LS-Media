@@ -29,13 +29,13 @@ been made possible through the utilization of the Rcpp package, which offers a c
 interface for invoking C++ scripts within R.
 
 Before running the following scripts, make sure that your version of R is updated (at least v. 2020-10-10)
-and to run the script JASA_Preliminary_01_InstallPackages.R inside the folder "01-Preliminaries" to
+and to run the script Preliminary_01_InstallPackages.R inside the folder "01-Preliminaries" to
 install all the required packages. Make also sure to change the working directory to your path whenever 
 It is clearly stated:
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 -------------------------------------------------------------------------------
@@ -48,15 +48,15 @@ setwd("~/Desktop/RepositoryJASA/")
 The following R script files are used to estimate the Bayesian Markov-Switching Latent-Space network model 
 (hereafter MS-LS) on the datasets studied in the main paper (Section 3, Section 4, and Supplement):
 
-* JASA_Dynamic_01_Results_[Country].R
+* Dynamic_01_Results_[Country].R
 Estimates the MS-LS model on the dynamic network dataset.
 Running time (*) > 20 hrs 
 
-* JASA_Static_01_Results_[Country].R
+* Static_01_Results_[Country].R
 Estimates the MS-LS model on the static network dataset.
 Running time ~45 mins
 
-* JASA_Simulation_02_results.R
+* Simulation_02_results.R
 Generates a synthetic dataset and estimates the MS-LS model.
 Running time ~13 mins
 
@@ -64,19 +64,19 @@ Running time ~13 mins
 
 The following R scripts files allow us to plot the Figures reported in the main text:
 
-* JASA_Graph_01.R
+* Graph_01.R
 Generates the introductory Graph reported in Figure 1
 
-* JASA_Properties_01.R
+* Properties_01.R
 Generates the contour plots reported in Figure 4
 
-* JASA_Simulation_02_results.R
+* Simulation_02_results.R
 Generates the figures of the synthetic data analysis (Figure 5, Figure D.1, Figure D.2, Figure D.3, Table D.1)
 
-* JASA_Static_02_Plots.R
+* Static_02_Plots.R
 Generates the figures of the static data analysis (Figure 7, Figure I.1)
 
-* JASA_Dynamic_02_Plots.R
+* Dynamic_02_Plots.R
 Generates the figures of the static data analysis (Figure 8, Figure 9, Figure 10, Figure 11)
 
 
@@ -91,7 +91,7 @@ Generates the figures of the static data analysis (Figure 8, Figure 9, Figure 10
 The C++ script necessary for running the Bayesian MS-LS model is reported here below along
 with a brief description of the main function and its signature.C++ is integrated into R via Rcpp.
 
-* JASA_MS_LS_FE.cpp
+* MS_LS_FE.cpp
 The script contains the MCMC function to estimate the Bayesian MS-LS network model for a dynamic network.
 The dynamic network is expected to have N nodes for each time t=1,...,Time and count weighted edges.
 
@@ -261,7 +261,7 @@ The main output is a list object called "result" containing the following elemen
 -------------------------------------------------------------------------------
 
 
-* JASA_01_TextAnalysis_IT.R
+* 01_TextAnalysis_IT.R
 We provide this script as an example of how to create the "slant index":
 The code implements a time-varying cosine similarity between the language used by political parties
 And the language used by news outlets on a daily basis. The output is the DBplane dataset for Italy.
@@ -269,7 +269,7 @@ Running time ~45 mins.
 
 The code is also used to reproduce Figure F.1 and F.2. 
 
-* JASA_Properties_02.R
+* Properties_02.R
 Generates the contour plots reported in Figure B.2
 Running time ~10 mins.
 
@@ -286,7 +286,7 @@ The following script can be used to run a static version of the MS-LS model:
 * Rcpp_rf_[country].cpp
 The script contains a function, namely MCMC, suitable for static analysis (similar to the main c++ script).
 
-* JASA_Predictive.cpp
+* Predictive.cpp
 The script contains a set of functions to generate Table 2, Table 4 and Figure I.2
 
 
@@ -298,7 +298,7 @@ The script contains a set of functions to generate Table 2, Table 4 and Figure I
 
 The following .RData files include the data used in the applications (Section 4):
 
-* JASA_SimulationEnv_FE.RData
+* SimulationEnv_FE.RData
 Contains the synthetic dataset used in Section 3.3 
 
 * Data_Env_single_[country].RData
