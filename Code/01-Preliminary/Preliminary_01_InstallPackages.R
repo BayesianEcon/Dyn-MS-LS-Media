@@ -3,7 +3,7 @@
 rm(list = ls())
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 #install all the packages necessary to run the scripts

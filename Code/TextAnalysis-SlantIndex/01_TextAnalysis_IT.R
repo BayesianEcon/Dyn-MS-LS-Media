@@ -8,7 +8,7 @@ new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"
 if(length(new.packages)) install.packages(new.packages)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 library(udpipe)

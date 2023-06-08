@@ -8,7 +8,7 @@ library(data.table)
 
 ########CHANGE YOUR PATH ###########
 #if you run this code individually
-# setwd("~/Desktop/RepositoryJASA/")
+# setwd("~/Desktop/Repository/")
 #####################################
 
 #simulation
@@ -247,6 +247,6 @@ rm(list= remove_list)
 
 
 
-save.image("Data/Simulation/JASA_SimulationEnv_FE.RData")
+save.image("Data/Simulation/SimulationEnv_FE.RData")
 
 print("1 - Synthetic Dataset Generated!")

@@ -11,7 +11,7 @@ library(scales)
 library(igraph)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 start_time <- Sys.time()  

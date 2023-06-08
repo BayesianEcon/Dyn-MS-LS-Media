@@ -13,7 +13,7 @@ library(patchwork)
 library(metR)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 #LS property plot

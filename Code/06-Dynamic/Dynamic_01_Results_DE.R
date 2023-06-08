@@ -1,14 +1,17 @@
 ############## Gibbs Sampler #######################
-############## Preliminaries ####################### 
+############## Preliminaries #######################
 
 
 rm(list = ls())
 
 #load the libraries
 
-list.of.packages <- c("mvtnorm", "Rcpp", "RcppDist", "RcppParallel", "RcppArmadillo")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+list.of.packages <-
+  c("mvtnorm", "Rcpp", "RcppDist", "RcppParallel", "RcppArmadillo")
+new.packages <-
+  list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
+if (length(new.packages))
+  install.packages(new.packages)
 
 
 library(mvtnorm)
@@ -18,24 +21,35 @@ library(RcppParallel)
 library(RcppArmadillo)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
-Multi <- function(x){m<-rmultinom(1, size = 1, prob = x)
-m<-t(m) 
-return(m)
+Multi <- function(x) {
+  m <- rmultinom(1, size = 1, prob = x)
+  m <- t(m)
+  return(m)
 }
 
-odd<-function(x){(1/(1+exp(-1*x)))} #logistic function
-odd_inv<-function(x){ (1-(1/(1+exp(-1*x))))  } #
+odd <- function(x) {
+  (1 / (1 + exp(-1 * x)))
+} #logistic function
+odd_inv <- function(x) {
+  (1 - (1 / (1 + exp(-1 * x))))
+} #
 
-log_sum_exp = function(x) {  b<- max(x); return(b + log(sum(exp(x-b))))  } #define log sum exp function
-softmax <- function (x) {exp(x - log_sum_exp(x))} #define softmax function
+log_sum_exp = function(x) {
+  b <-
+    max(x)
+  return(b + log(sum(exp(x - b))))
+} #define log sum exp function
+softmax <-
+  function (x) {
+    exp(x - log_sum_exp(x))
+  } #define softmax function
 
 
-load("Data/Dynamic/DataEnv_IT_all.RData")
-sourceCpp("Code/Model/JASA_MS_LS_FE.cpp")
-
+load("Data/Dynamic/DataEnv_DE_all.RData")
+sourceCpp("Code/Model/MS_LS_FE.cpp")
 
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
@@ -77,6 +91,12 @@ EL_princ$ith<-as.numeric(factor(EL_princ$i , levels = unique(EL_x$i)))
 EL_princ$jth<-as.numeric(factor(EL_princ$j, levels = unique(EL_x$i)))
 
 
+###########################
+#load("DataEnv_DE.RData")
+
+#source("/home/peruzzi/LPmodel/political_programs/02_DE/InputNodesModification_de.R")
+
+
 EL_x$ith_jth<-paste0(EL_x$ith,"_",EL_x$jth)
 EL_x$i_j<- EL_x$ith_jth
 EL_x$t<-as.numeric(as.factor(EL_x$t))
@@ -86,7 +106,9 @@ DBplane$ith<-as.numeric(as.factor(DBplane$i))
 DBplane$leaning<- (DBplane$leaning - (min(DBplane$leaning)-0.01))/((max(DBplane$leaning)+0.01) - (min(DBplane$leaning)-0.01)   )
 
 
-############## SETUP 
+############## SETUP #######################
+
+
 pages_names<- c(unique(EL$i)) # a vector of page names
 
 #Main Dimensions
@@ -115,8 +137,8 @@ b_gamma_1 <- 10
 mu_a<-c( 0 , 0)
 mu_b<-c( 0, 0)
 
-sigma_a<- 10
-sigma_b<- 10
+sigma_a<- 15
+sigma_b<- 15
 
 
 #Hyperparameters for P
@@ -143,6 +165,7 @@ zi_b$i<-pages_names
 zi_b[,1] <-  rnorm(length(zi_b[,1]), 0, 0.2)
 zi_b[,2] <-  rnorm(length(zi_b[,2]), 0, 0.2)
 zi_b_it<-list()
+
 
 
 #Initialization of Xi
@@ -173,6 +196,8 @@ gamma_0 <-  -1 #-0.5
 
 gamma_1 <-  0.5 #0.3
 
+
+
 rownames(EL_princ)<-1:nrow(EL_princ)
 
 ######
@@ -183,6 +208,7 @@ mu_mat_beta = matrix(0, Npages, 2)
 
 id<-diag(c(1,1))
 Sigma_ad_beta <- rep(list(id),Npages)
+
 # 
 # id<-diag(c(1))
 # Sigma_ad_beta <- rep(list(id),Npages)
@@ -202,11 +228,13 @@ id<-diag(c(1, 1))
 Sigma_ad_zb <- rep(list(id),Npages)
 
 
+
 rg_eq = 0
 interp_eq = 1
 ms_eq = 1
 
 
+#################################
 start_time <- Sys.time()  
 
 result = MCMC(princ_w = EL_princ$w,
@@ -256,7 +284,7 @@ result = MCMC(princ_w = EL_princ$w,
               acc_beta = 0.25, 
               acc_zeta_a = 0.25 , 
               acc_zeta_b = 0.25 , 
-              pivot = which(pages_names == "Libero"), 
+              pivot =  which(pages_names == "Bild"),
               sign = 1,
               interp_eq = interp_eq, 
               ms_eq = ms_eq,
@@ -267,19 +295,18 @@ end_time-start_time
 
 if(interp_eq ==1 & ms_eq == 1){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_ITz_fe.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe.RData")
   
   
 }else if(interp_eq ==1 & ms_eq == 0){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_ITz_fe_no_ms.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe_no_ms.RData")
   
 }else if(interp_eq ==0 & ms_eq == 1){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_ITz_fe_no_interp.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe_no_interp.RData")
   
 }
-
 
 
 ################Plots########################
@@ -299,16 +326,14 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 
-load("Data/Dynamic/DataEnv_IT_all.RData")
-load("Code/06-Dynamic/Results/RESULT_SC_ITz_fe.RData")
-
+load("Data/Dynamic/DataEnv_DE_all.RData")
+load("Code/06-Dynamic/Results/RESULT_SC_DEz_fe.RData")
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
-
 
 for(i in 1:length(unique(EL_x$i) )){
   
@@ -323,6 +348,8 @@ for(i in 1:length(unique(EL_x$i) )){
 
 
 thr <- c(a$name[a$max_czeros > 15])
+
+
 
 
 DBplane<-DBplane[! DBplane$fb_name %in% thr ,  ]
@@ -346,29 +373,29 @@ EL_x$jth<-as.numeric(factor(EL_x$j) , levels = unique(EL_x$i))
 EL_princ$ith<-as.numeric(factor(EL_princ$i , levels = unique(EL_x$i)))
 EL_princ$jth<-as.numeric(factor(EL_princ$j, levels = unique(EL_x$i)))
 
-pages_names_it<- c(unique(EL_x$i)) # a vector of page names
-
 
 dates<- unique(as_date(DBplane$t))
 
 
-top_names<-c("Corriere.della.Sera" , "Il.Fatto.Quotidiano", "Il.Giornale", "la.Repubblica", "La7", "Libero", "Rainews.it", "Tgcom24" )
+pages_names_de<- c(unique(EL_x$i)) # a vector of page names
+pages_names_de[10]<- "FAZ"
 
-beta_it<- result[[1]]
+beta_de<- result[[1]]
 
-zeta_it_a<- result[[3]]
-zeta_it_a<-data.frame(zeta_it_a)
+zeta_de_a<- result[[3]]
+zeta_de_a<-data.frame(zeta_de_a)
 
-zeta_it_b<- result[[4]]
-zeta_it_b<-data.frame(zeta_it_b)
-
-
-colnames(zeta_it_a) <-c("X1","X2", "i", "it")
-colnames(zeta_it_b) <-c("X1","X2", "i", "it")
+zeta_de_b<- result[[4]]
+zeta_de_b<-data.frame(zeta_de_b)
 
 
-zeta_it_a_sub <-zeta_it_a[zeta_it_a$it %in% seq(20000, 35000, 1), ]
-zeta_it_b_sub <-zeta_it_b[zeta_it_b$it %in% seq(20000, 35000, 1), ]
+colnames(zeta_de_a) <-c("X1","X2", "i", "it")
+colnames(zeta_de_b) <-c("X1","X2", "i", "it")
+
+
+zeta_de_a_sub <-zeta_de_a[zeta_de_a$it %in% seq(20000, 35000, 1), ]
+zeta_de_b_sub <-zeta_de_b[zeta_de_b$it %in% seq(20000, 35000, 1), ]
+
 
 
 zi_a_it<-data.frame(result$zi_a_it)
@@ -386,77 +413,76 @@ zi_b_it<-reshape2::dcast(zi_b_it, it ~ i)
 zi_b_it<-zi_b_it[,-1]
 
 
-
 # obj1<-update_zi(as.matrix(zi_a_it), as.matrix(zi_b_it))
 # zi_a_it<-obj1[[1]]
 # zi_b_it<-obj1[[2]]
 
-agg_zeta_it_a<-aggregate(zeta_it_a_sub[,1:2], by = list(zeta_it_a_sub$i), FUN = mean )
-agg_zeta_it_a$X1<-colMeans(zi_a_it[seq(20000, 35000, ), ])
 
-agg_beta_it<-colMeans(beta_it[seq(20000, 35000, 1), ])
-agg_zeta_it_a$names<- pages_names_it
+agg_zeta_de_a<-aggregate(zeta_de_a_sub[,1:2], by = list(zeta_de_a_sub$i), FUN = mean )
+agg_zeta_de_a$X1<-colMeans(zi_a_it[seq(20000, 35000, ), ])
 
-agg_zeta_it_b<-aggregate(zeta_it_b_sub[,1:2], by = list(zeta_it_b_sub$i), FUN = mean )
-agg_zeta_it_b$X1<-colMeans(zi_b_it[seq(20000, 35000, ), ])
+agg_beta_de<-colMeans(beta_de[seq(20000, 35000, 1), ])
+agg_zeta_de_a$names<- pages_names_de
 
-agg_beta_it<-colMeans(beta_it[seq(20000, 35000, 1), ])
-agg_zeta_it_b$names<- pages_names_it
+agg_zeta_de_b<-aggregate(zeta_de_b_sub[,1:2], by = list(zeta_de_b_sub$i), FUN = mean )
+agg_zeta_de_b$X1<-colMeans(zi_b_it[seq(20000, 35000, ), ])
 
+agg_beta_de<-colMeans(beta_de[seq(20000, 35000, 1), ])
+agg_zeta_de_b$names<- pages_names_de
 
-boxplot(c(dist(c(agg_zeta_it_a$X1))), c(dist(c(agg_zeta_it_b$X1))))
+top_names<-  c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" )
 
-pew_it_a<- agg_zeta_it_a[agg_zeta_it_a$names %in%c("Corriere.della.Sera" , "Il.Fatto.Quotidiano", "Il.Giornale", "la.Repubblica", "La7", "Libero", "Rainews.it", "Tgcom24" ), ]
-pew_it_a$State<- "State H"
-pew_it_a$score_a<- c(3.3, 3.0, 4.1, 2.7, 3.1, 4.2, 2.9, 4.5) - mean( c(3.3, 3.0, 4.1, 2.7, 3.1, 4.2, 2.9, 4.5))
-pew_it_a$score_b<-  c(3.2, 3.2, 3.7, 3.0, 3.2, 3.6, 3.3, 3.7) - mean( c(3.2, 3.2, 3.7, 3.0, 3.2, 3.6, 3.3, 3.7)  )
+pew_de_a<- agg_zeta_de_a[agg_zeta_de_a$names %in% c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" ), ]
+pew_de_a$State<- "State H"
+pew_de_a$score_a<- c(3.6, 3.2, 3.2, 2.7, 3) - mean(c(3.6, 3.2, 3.2, 2.7, 3))
+pew_de_a$score_b<- c(3.1, 2.9, 3, 2.8, 2.8) - mean(c(3.1, 2.9, 3, 2.8, 2.8))
 
-cor(pew_it_a$X1, pew_it_a$score_a)
+cor(pew_de_a$X1, pew_de_a$score_a)
 
-pew_it_b<- agg_zeta_it_b[agg_zeta_it_b$names %in% c("Corriere.della.Sera" , "Il.Fatto.Quotidiano", "Il.Giornale", "la.Repubblica", "La7", "Libero", "Rainews.it", "Tgcom24" ), ]
-pew_it_b$State<- "State L"
-pew_it_b$score_a<- c(3.3, 3.0, 4.1, 2.7, 3.1, 4.2, 2.9, 4.5) - mean( c(3.3, 3.0, 4.1, 2.7, 3.1, 4.2, 2.9, 4.5))
-pew_it_b$score_b<-  c(3.2, 3.2, 3.7, 3.0, 3.2, 3.6, 3.3, 3.7) - mean( c(3.2, 3.2, 3.7, 3.0, 3.2, 3.6, 3.3, 3.7)  )
+pew_de_b<- agg_zeta_de_b[agg_zeta_de_b$names %in% c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" ), ]
+pew_de_b$State<- "State L"
+pew_de_b$score_a<- c(3.6, 3.2, 3.2, 2.7, 3) - mean(c(3.6, 3.2, 3.2, 2.7, 3))
+pew_de_b$score_b<- c(3.1, 2.9, 3, 2.8, 2.8) - mean(c(3.1, 2.9, 3, 2.8, 2.8))
 
-pew_it<-rbind(pew_it_a, pew_it_b)
-cor(pew_it_b$X1, pew_it_b$score_a)
-pew_it$country<- "Italy"
+pew_de<-rbind(pew_de_a, pew_de_b)
+cor(pew_de_b$X1, pew_de_b$score_a)
+pew_de$country<- "Germany"
 
-
-db_it_a<-data.frame(agg_zeta_it= agg_zeta_it_a$X1,agg_beta_it= agg_beta_it, names=pages_names_it )
-db_it_a$State<- "State H"
-db_it_b<-data.frame(agg_zeta_it= agg_zeta_it_b$X1,agg_beta_it= agg_beta_it, names=pages_names_it )
-db_it_b$State<- "State L"
-
-db_it<- rbind(db_it_a,db_it_b)
-db_it$State<-factor(db_it$State,  levels = c("State L", "State H"))
+db_de_a<-data.frame(agg_zeta_de= agg_zeta_de_a$X1,agg_beta_de= agg_beta_de, names=pages_names_de )
+db_de_a$State<- "State H"
+db_de_b<-data.frame(agg_zeta_de= agg_zeta_de_b$X1,agg_beta_de= agg_beta_de, names=pages_names_de )
+db_de_b$State<- "State L"
 
 
-p2<-ggplot(db_it, aes(x = agg_zeta_it, y = agg_beta_it, label = names)) +facet_wrap(~State, scales = "free_y")
+
+db_de<- rbind(db_de_a,db_de_b)
+db_de$State<-factor(db_de$State,  levels = c("State L", "State H"))
+
+
+p2<-ggplot(db_de, aes(x = agg_zeta_de, y = agg_beta_de, label = names)) +facet_wrap(~State, scales = "free_y")
 p2<- p2+ geom_point(col = "#ff420f", size = 1)
+p2<- p2 + geom_text_repel(data = db_de,size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Germany", col = "white")
+#p2<- p2 + geom_text_repel(data = db_de[db_de$names %in% top_names,] ,size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Germany", col = "white")
+p2 <- p2 + theme(panel.grid = element_blank())
 p2<- p2+ scale_x_continuous(limits = symmetric_limits) +  scale_y_continuous(limits = symmetric_limits) 
-#p2<- p2 + geom_text_repel(data = db_it, size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Italy", col = "white")
-p2<- p2 + geom_text_repel(data = db_it[db_it$names %in% top_names,],size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Italy", col = "white")
-p2 <- p2 + theme(panel.grid = element_blank())  
-p2 <- p2 + theme_minimal() + theme(strip.placement = "outside",legend.position="none", plot.title = element_text(face = "italic",
-                                                                                                                 size = 14),
-                                   strip.text.x = element_blank(),
-                                   
-                                   axis.title = element_text( face = "italic",size = rel(1)),
-                                   axis.title.y = element_text(size = 14, angle=90,vjust =2),
-                                   axis.title.x = element_blank(),
-                                   axis.text=element_text(size=12),
-                                   axis.line = element_blank(),
-                                   axis.ticks = element_line(),
-                                   panel.grid = element_blank(),
-                                   panel.border = element_rect(colour = "black", fill = NA))
+p2 <- p2 + theme_minimal() + theme_minimal() + theme(strip.placement = "outside",legend.position="none", 
+                                                     plot.title = element_text(face = "italic",   size = 14),
+                                                     strip.text.x = element_blank(),
+                                                     
+                                                     axis.title = element_text( face = "italic",size = rel(1)),
+                                                     axis.title.y = element_text(size = 14, angle=90,vjust =2),
+                                                     axis.title.x = element_blank(),
+                                                     axis.text=element_text(size=12),
+                                                     axis.line = element_blank(),
+                                                     axis.ticks = element_line(),
+                                                     panel.grid = element_blank(),
+                                                     panel.border = element_rect(colour = "black", fill = NA))
 
 
 
+p2_de<-p2
 
 
-
-p2_it<-p2
 
 
 
@@ -476,10 +502,8 @@ result8$sb_mean <- cumsum(result8$X2)/(1:length(result8$X2))
 result8$ite<- 1:length(result8$X2)
 
 
-gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 10 ),1:2], key = "parameter", value = "value")
+gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 1 ),1:2], key = "parameter", value = "value")
 gat2$parameter<-factor(gat2$parameter, levels=c("X2","X1"), labels = c("sigma[L]^2","sigma[H]^2"))
-
-
 
 gat1$parameter<-factor(gat1$parameter)
 gat1$parameter<-factor(gat1$parameter, labels = c("gamma[0]", "gamma[1]", "phi", "tau"))
@@ -500,9 +524,11 @@ plot_labeller <- function(variable, value) {
 
 
 gat<-gat[,1:2]
+
 # gat_prior<-gat
 # gat_prior$value <-c(prior_phi, prior_g0, prior_g1)
 # gat_prior$type <- "prior"
+
 
 colnames(gat)[1]<-"level"
 
@@ -528,7 +554,7 @@ z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[L]^
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[H]^2"),fun = dinvgamma, args = list(shape = 0.01, scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "black", inherit.aes = F)
 z<-z+ facet_wrap( .~ factor(level ,  levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2")), ncol = 6, scales = "free",labeller = label_parsed) 
 z<- z + scale_shape_manual(labels =  parse_format())
-z <- z + labs(title = "Italy", 
+z <- z + labs(title = "Germany", 
               x = "Value",  y = "")+  theme_minimal() + theme(legend.position="none", plot.title = element_text(face = "italic",
                                                                                                                 size = 22, hjust = 0.5),
                                                               axis.text=element_text(size=8),
@@ -545,14 +571,12 @@ z <- z + labs(title = "Italy",
 
 
 
-w_it<-z 
-
+w_de<-z 
 
 
 result7<- result[[6]]
 colnames(result7)<-c("state1", "state2", "t", "ite")
 result7<-data.frame(result7)
-
 
 
 xi_it_sub<-result7[result7$ite %in% seq(25000, 35000, 10),]
@@ -566,7 +590,7 @@ xi_it_agg_area<- xi_it_agg
 xi_it_agg_area$dd<- c(1, diff(xi_it_agg_area$state1))
 xi_it_agg_area<-xi_it_agg_area[(abs(xi_it_agg_area$dd) >=  0.20 ) ,]
 xi_it_agg_area$lead<-lead(xi_it_agg_area$t)
-xi_it_agg_area$lead[length(xi_it_agg_area$lead)]<- xi_it_agg$t[length(xi_it_agg$t)] +1
+xi_it_agg_area$lead[length(xi_it_agg_area$lead)]<- xi_it_agg$t[length(xi_it_agg$t)]+1
 
 q<- ggplot(xi_it_agg)+labs(x ="time", y = "State", colour = "State")
 #q<- q + geom_point(aes(x = t, y = State), color ="#ff420f", shape = 15 , size = 0.1)
@@ -577,7 +601,7 @@ q<- q + geom_point(data = xi_it_agg , aes(x = t,  y= as.numeric(State)), size = 
 # q<- q + geom_rect(aes(xmin = t, xmax = lead(t), 
 #                       ymin = 0, ymax  = 1-(as.numeric(State)-1)), col ="red", alpha = 0.01)
 # 
-q<- q + labs(title = "Italy",
+q<- q + labs(title = "Germany",
              x = "Time", y = "P.P. - State H")+ theme_minimal() + theme(legend.position="bottom", plot.title = element_text(face = "italic",
                                                                                                                             size = 36, hjust = 0.5),
                                                                         strip.text.x = element_text(size = 24,face = "italic"),
@@ -595,7 +619,10 @@ q<- q + labs(title = "Italy",
 
 
 
-q_it<- q
+q_de<- q
+
+
+
 
 
 result6<- data.frame(result[[5]])
@@ -605,6 +632,8 @@ ps<- apply(result6,2, FUN = mean)
 ps
 ps_m<-matrix(ps, 2,2, byrow = T)
 ps_m<-round(ps_m,3)
+
+
 
 melted_cormat <- reshape2::melt(t(ps_m), na.rm = TRUE)
 melted_cormat$value<-round(melted_cormat$value,3)
@@ -619,7 +648,7 @@ melted_cormat$Var2 <- factor(melted_cormat$Var2 ,labels = c("H","L"))
 
 # Create a ggheatmap
 ggheatmap1 <- ggplot(melted_cormat, aes(Var1, Var2, fill = value))+
-  geom_tile(color = "white")+ labs(x= "States", y ="States", title = "Italy" )+
+  geom_tile(color = "white")+ labs(x= "States", y ="States", title = "Germany" )+
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1,1), space = "Lab", 
                        name="Pearson\nCorrelation") +
@@ -639,5 +668,7 @@ ggheatmap1 <- ggplot(melted_cormat, aes(Var1, Var2, fill = value))+
 
 
 
-ggheatmap_it <- ggheatmap1
+ggheatmap_de <- ggheatmap1
+
+
 

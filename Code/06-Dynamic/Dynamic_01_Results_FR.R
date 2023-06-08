@@ -1,17 +1,14 @@
 ############## Gibbs Sampler #######################
-############## Preliminaries #######################
+############## Preliminaries ####################### 
 
 
 rm(list = ls())
 
 #load the libraries
 
-list.of.packages <-
-  c("mvtnorm", "Rcpp", "RcppDist", "RcppParallel", "RcppArmadillo")
-new.packages <-
-  list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
-if (length(new.packages))
-  install.packages(new.packages)
+list.of.packages <- c("mvtnorm", "Rcpp", "RcppDist", "RcppParallel", "RcppArmadillo")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 
 
 library(mvtnorm)
@@ -21,36 +18,23 @@ library(RcppParallel)
 library(RcppArmadillo)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
-Multi <- function(x) {
-  m <- rmultinom(1, size = 1, prob = x)
-  m <- t(m)
-  return(m)
+Multi <- function(x){m<-rmultinom(1, size = 1, prob = x)
+m<-t(m) 
+return(m)
 }
 
-odd <- function(x) {
-  (1 / (1 + exp(-1 * x)))
-} #logistic function
-odd_inv <- function(x) {
-  (1 - (1 / (1 + exp(-1 * x))))
-} #
+odd<-function(x){(1/(1+exp(-1*x)))} #logistic function
+odd_inv<-function(x){ (1-(1/(1+exp(-1*x))))  } #
 
-log_sum_exp = function(x) {
-  b <-
-    max(x)
-  return(b + log(sum(exp(x - b))))
-} #define log sum exp function
-softmax <-
-  function (x) {
-    exp(x - log_sum_exp(x))
-  } #define softmax function
+log_sum_exp = function(x) {  b<- max(x); return(b + log(sum(exp(x-b))))  } #define log sum exp function
+softmax <- function (x) {exp(x - log_sum_exp(x))} #define softmax function
 
 
-load("Data/Dynamic/DataEnv_DE_all.RData")
-sourceCpp("Code/Model/JASA_MS_LS_FE.cpp")
-
+load("Data/Dynamic/DataEnv_FR_all.RData")
+sourceCpp("Code/Model/MS_LS_FE.cpp")
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
 
@@ -91,12 +75,6 @@ EL_princ$ith<-as.numeric(factor(EL_princ$i , levels = unique(EL_x$i)))
 EL_princ$jth<-as.numeric(factor(EL_princ$j, levels = unique(EL_x$i)))
 
 
-###########################
-#load("DataEnv_DE.RData")
-
-#source("/home/peruzzi/LPmodel/political_programs/02_DE/InputNodesModification_de.R")
-
-
 EL_x$ith_jth<-paste0(EL_x$ith,"_",EL_x$jth)
 EL_x$i_j<- EL_x$ith_jth
 EL_x$t<-as.numeric(as.factor(EL_x$t))
@@ -106,9 +84,7 @@ DBplane$ith<-as.numeric(as.factor(DBplane$i))
 DBplane$leaning<- (DBplane$leaning - (min(DBplane$leaning)-0.01))/((max(DBplane$leaning)+0.01) - (min(DBplane$leaning)-0.01)   )
 
 
-############## SETUP #######################
-
-
+############## SETUP 
 pages_names<- c(unique(EL$i)) # a vector of page names
 
 #Main Dimensions
@@ -137,8 +113,8 @@ b_gamma_1 <- 10
 mu_a<-c( 0 , 0)
 mu_b<-c( 0, 0)
 
-sigma_a<- 15
-sigma_b<- 15
+sigma_a<- 10
+sigma_b<- 10
 
 
 #Hyperparameters for P
@@ -166,10 +142,7 @@ zi_b[,1] <-  rnorm(length(zi_b[,1]), 0, 0.2)
 zi_b[,2] <-  rnorm(length(zi_b[,2]), 0, 0.2)
 zi_b_it<-list()
 
-
-
 #Initialization of Xi
-# 
 
 xi <- data.frame(matrix(rep(1/2,Time*K), nrow =  Time, ncol = K , byrow=TRUE))
 xi<-t(apply(xi,1, FUN = Multi ))
@@ -196,22 +169,15 @@ gamma_0 <-  -1 #-0.5
 
 gamma_1 <-  0.5 #0.3
 
-
-
 rownames(EL_princ)<-1:nrow(EL_princ)
 
 ######
-
 
 lam_ad_beta = rep(  0.1, Npages)
 mu_mat_beta = matrix(0, Npages, 2)
 
 id<-diag(c(1,1))
 Sigma_ad_beta <- rep(list(id),Npages)
-
-# 
-# id<-diag(c(1))
-# Sigma_ad_beta <- rep(list(id),Npages)
 
 ########
 
@@ -227,12 +193,9 @@ mu_mat_zb = matrix(0, Npages, 2)
 id<-diag(c(1, 1))
 Sigma_ad_zb <- rep(list(id),Npages)
 
-
-
 rg_eq = 0
 interp_eq = 1
 ms_eq = 1
-
 
 #################################
 start_time <- Sys.time()  
@@ -275,7 +238,7 @@ result = MCMC(princ_w = EL_princ$w,
               omega_lower_a = 2, 
               omega_lower_b = 2, 
               P = P,
-              N = Npages,
+              N = Npages, 
               Time = Time ,
               x_i = EL_x$ith,
               DBplane_i  = DBplane$i,
@@ -283,9 +246,9 @@ result = MCMC(princ_w = EL_princ$w,
               prop_sd_phi = 2, 
               acc_beta = 0.25, 
               acc_zeta_a = 0.25 , 
-              acc_zeta_b = 0.25 , 
-              pivot =  which(pages_names == "Bild"),
-              sign = 1,
+              acc_zeta_b = 0.25 ,  
+              pivot = which(pages_names == "l'Humanité"), 
+              sign = -1,
               interp_eq = interp_eq, 
               ms_eq = ms_eq,
               rg_eq = rg_eq,
@@ -295,18 +258,20 @@ end_time-start_time
 
 if(interp_eq ==1 & ms_eq == 1){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_FRz_fe.RData")
   
   
 }else if(interp_eq ==1 & ms_eq == 0){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe_no_ms.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_FRz_fe_no_ms.RData")
   
 }else if(interp_eq ==0 & ms_eq == 1){
   
-  save(result, file = "Code/06-Dynamic/RESULT_SC_DEz_fe_no_interp.RData")
+  save(result, file = "Code/06-Dynamic/RESULT_SC_FRz_fe_no_interp.RData")
+  
   
 }
+
 
 
 ################Plots########################
@@ -326,12 +291,14 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 
-load("Data/Dynamic/DataEnv_DE_all.RData")
-load("Code/06-Dynamic/Results/RESULT_SC_DEz_fe.RData")
+###################FRANCE###################
+
+load("Data/Dynamic/DataEnv_FR_all.RData")
+load("Code/06-Dynamic/Results/RESULT_SC_FRz_fe.RData")
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
 
@@ -339,6 +306,7 @@ for(i in 1:length(unique(EL_x$i) )){
   
   name = unique(EL_x$i)[i]
   resa<-aggregate(EL_x$w[EL_x$i == name ], by = list(EL_x$t[EL_x$i == name ]), sum)
+  
   x<- rle(resa$x==0)
   
   if(length(x$lengths[x$values == TRUE])>0){
@@ -348,8 +316,6 @@ for(i in 1:length(unique(EL_x$i) )){
 
 
 thr <- c(a$name[a$max_czeros > 15])
-
-
 
 
 DBplane<-DBplane[! DBplane$fb_name %in% thr ,  ]
@@ -373,29 +339,27 @@ EL_x$jth<-as.numeric(factor(EL_x$j) , levels = unique(EL_x$i))
 EL_princ$ith<-as.numeric(factor(EL_princ$i , levels = unique(EL_x$i)))
 EL_princ$jth<-as.numeric(factor(EL_princ$j, levels = unique(EL_x$i)))
 
+pages_names_fr<- c(unique(EL_x$i)) # a vector of page names
 
 dates<- unique(as_date(DBplane$t))
 
+top_names<-c("TF1", "Le Figaro",  "BFMTV",  "L'Express" , "Le Monde", "Libération",  "Mediapart")
 
-pages_names_de<- c(unique(EL_x$i)) # a vector of page names
-pages_names_de[10]<- "FAZ"
+beta_fr<- result[[1]]
 
-beta_de<- result[[1]]
+zeta_fr_a<- result[[3]]
+zeta_fr_a<-data.frame(zeta_fr_a)
 
-zeta_de_a<- result[[3]]
-zeta_de_a<-data.frame(zeta_de_a)
-
-zeta_de_b<- result[[4]]
-zeta_de_b<-data.frame(zeta_de_b)
+zeta_fr_b<- result[[4]]
+zeta_fr_b<-data.frame(zeta_fr_b)
 
 
-colnames(zeta_de_a) <-c("X1","X2", "i", "it")
-colnames(zeta_de_b) <-c("X1","X2", "i", "it")
+colnames(zeta_fr_a) <-c("X1","X2", "i", "it")
+colnames(zeta_fr_b) <-c("X1","X2", "i", "it")
 
 
-zeta_de_a_sub <-zeta_de_a[zeta_de_a$it %in% seq(20000, 35000, 1), ]
-zeta_de_b_sub <-zeta_de_b[zeta_de_b$it %in% seq(20000, 35000, 1), ]
-
+zeta_fr_a_sub <-zeta_fr_a[zeta_fr_a$it %in% seq(20000, 35000, 1), ]
+zeta_fr_b_sub <-zeta_fr_b[zeta_fr_b$it %in% seq(20000, 35000, 1), ]
 
 
 zi_a_it<-data.frame(result$zi_a_it)
@@ -418,71 +382,84 @@ zi_b_it<-zi_b_it[,-1]
 # zi_b_it<-obj1[[2]]
 
 
-agg_zeta_de_a<-aggregate(zeta_de_a_sub[,1:2], by = list(zeta_de_a_sub$i), FUN = mean )
-agg_zeta_de_a$X1<-colMeans(zi_a_it[seq(20000, 35000, ), ])
+agg_zeta_fr_a<-aggregate(zeta_fr_a_sub[,1:2], by = list(zeta_fr_a_sub$i), FUN = mean )
+agg_zeta_fr_a$X1<-colMeans(zi_a_it[seq(20000, 35000, ), ])
 
-agg_beta_de<-colMeans(beta_de[seq(20000, 35000, 1), ])
-agg_zeta_de_a$names<- pages_names_de
+agg_beta_fr<-colMeans(beta_fr[seq(20000, 35000, 1), ])
+agg_zeta_fr_a$names<- pages_names_fr
 
-agg_zeta_de_b<-aggregate(zeta_de_b_sub[,1:2], by = list(zeta_de_b_sub$i), FUN = mean )
-agg_zeta_de_b$X1<-colMeans(zi_b_it[seq(20000, 35000, ), ])
+agg_zeta_fr_b<-aggregate(zeta_fr_b_sub[,1:2], by = list(zeta_fr_b_sub$i), FUN = mean )
+agg_zeta_fr_b$X1<-colMeans(zi_b_it[seq(20000, 35000, ), ])
 
-agg_beta_de<-colMeans(beta_de[seq(20000, 35000, 1), ])
-agg_zeta_de_b$names<- pages_names_de
-
-top_names<-  c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" )
-
-pew_de_a<- agg_zeta_de_a[agg_zeta_de_a$names %in% c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" ), ]
-pew_de_a$State<- "State H"
-pew_de_a$score_a<- c(3.6, 3.2, 3.2, 2.7, 3) - mean(c(3.6, 3.2, 3.2, 2.7, 3))
-pew_de_a$score_b<- c(3.1, 2.9, 3, 2.8, 2.8) - mean(c(3.1, 2.9, 3, 2.8, 2.8))
-
-cor(pew_de_a$X1, pew_de_a$score_a)
-
-pew_de_b<- agg_zeta_de_b[agg_zeta_de_b$names %in% c("Bild", "FAZ", "RTL Aktuell", "Süddeutsche Zeitung", "SPIEGEL ONLINE" ), ]
-pew_de_b$State<- "State L"
-pew_de_b$score_a<- c(3.6, 3.2, 3.2, 2.7, 3) - mean(c(3.6, 3.2, 3.2, 2.7, 3))
-pew_de_b$score_b<- c(3.1, 2.9, 3, 2.8, 2.8) - mean(c(3.1, 2.9, 3, 2.8, 2.8))
-
-pew_de<-rbind(pew_de_a, pew_de_b)
-cor(pew_de_b$X1, pew_de_b$score_a)
-pew_de$country<- "Germany"
-
-db_de_a<-data.frame(agg_zeta_de= agg_zeta_de_a$X1,agg_beta_de= agg_beta_de, names=pages_names_de )
-db_de_a$State<- "State H"
-db_de_b<-data.frame(agg_zeta_de= agg_zeta_de_b$X1,agg_beta_de= agg_beta_de, names=pages_names_de )
-db_de_b$State<- "State L"
+agg_beta_fr<-colMeans(beta_fr[seq(20000, 35000, 1), ])
+agg_zeta_fr_b$names<- pages_names_fr
 
 
+pew_fr_a<- agg_zeta_fr_a[agg_zeta_fr_a$names %in%c("TF1", "Le Figaro",  "BFMTV",  "L'Express" , "Le Monde", "Libération",  "Mediapart"), ]
+pew_fr_a$State<- "State H"
+pew_fr_a$score_a<-  c(3.7, 3.4, 4, 3.3, 2.5, 2.3, 4.1) - mean( c(3.7, 3.4, 4, 3.3, 2.5, 2.3, 4.1))
+pew_fr_a$score_b<-  c(3.2,2.9,3.3,2.9, 2.5,2.4, 3.3) - mean( c(3.2,2.9,3.3,2.9, 2.5,2.4, 3.3) )
 
-db_de<- rbind(db_de_a,db_de_b)
-db_de$State<-factor(db_de$State,  levels = c("State L", "State H"))
+cor(pew_fr_a$X1, pew_fr_a$score_a)
+
+pew_fr_b<- agg_zeta_fr_b[agg_zeta_fr_b$names %in% c("TF1", "Le Figaro",  "BFMTV",  "L'Express" , "Le Monde", "Libération",  "Mediapart"), ]
+pew_fr_b$State<- "State L"
+pew_fr_b$score_a<-  c(3.7, 3.4, 4, 3.3, 2.5, 2.3, 4.1) - mean(c(3.6, 3.2, 3.2, 2.7, 3))
+pew_fr_b$score_b<- c(3.2,2.9,3.3,2.9, 2.5,2.4, 3.3) - mean(c(3.2,2.9,3.3,2.9, 2.5,2.4, 3.3))
+
+pew_fr<-rbind(pew_fr_a, pew_fr_b)
+cor(pew_fr_b$X1, pew_fr_b$score_a)
+pew_fr$country<- "France"
+
+#####################
+
+db_fr_a<-data.frame(agg_zeta_fr= agg_zeta_fr_a$X1,agg_beta_fr= agg_beta_fr, names=pages_names_fr )
+db_fr_a$State<- "State H"
+db_fr_b<-data.frame(agg_zeta_fr= agg_zeta_fr_b$X1,agg_beta_fr= agg_beta_fr, names=pages_names_fr )
+db_fr_b$State<- "State L"
 
 
-p2<-ggplot(db_de, aes(x = agg_zeta_de, y = agg_beta_de, label = names)) +facet_wrap(~State, scales = "free_y")
-p2<- p2+ geom_point(col = "#ff420f", size = 1)
-p2<- p2 + geom_text_repel(data = db_de,size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Germany", col = "white")
-#p2<- p2 + geom_text_repel(data = db_de[db_de$names %in% top_names,] ,size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "Germany", col = "white")
-p2 <- p2 + theme(panel.grid = element_blank())
+
+db_fr<- rbind(db_fr_a,db_fr_b)
+db_fr$State<-factor(db_fr$State,  levels = c("State L", "State H"))
+
+#credible ellipse state a
+
+p2<-ggplot(db_fr, aes(x = agg_zeta_fr, y = agg_beta_fr, label = names)) +facet_wrap(~State, scales = "free_y")
+p2<- p2+ geom_point(col = "#ff420f", size = 1)  
 p2<- p2+ scale_x_continuous(limits = symmetric_limits) +  scale_y_continuous(limits = symmetric_limits) 
-p2 <- p2 + theme_minimal() + theme_minimal() + theme(strip.placement = "outside",legend.position="none", 
-                                                     plot.title = element_text(face = "italic",   size = 14),
-                                                     strip.text.x = element_blank(),
-                                                     
-                                                     axis.title = element_text( face = "italic",size = rel(1)),
-                                                     axis.title.y = element_text(size = 14, angle=90,vjust =2),
-                                                     axis.title.x = element_blank(),
-                                                     axis.text=element_text(size=12),
-                                                     axis.line = element_blank(),
-                                                     axis.ticks = element_line(),
-                                                     panel.grid = element_blank(),
-                                                     panel.border = element_rect(colour = "black", fill = NA))
+p2<- p2 + geom_text_repel(data = db_fr[db_fr$names %in% top_names,],size = 3,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", title = "France", col = "white")
+p2 <- p2 + theme(panel.grid = element_blank())  
+p2 <- p2 + theme_minimal() + theme(strip.placement = "outside",legend.position="none", plot.title = element_text(face = "italic", size = 15),
+                                   
+                                   
+                                   axis.title = element_text( face = "italic",size = rel(1)),
+                                   axis.title.y = element_text(size = 14, angle=90,vjust =2),
+                                   axis.title.x = element_blank(),
+                                   axis.text=element_text(size=12),
+                                   axis.line = element_blank(),
+                                   axis.ticks = element_line(),
+                                   panel.grid = element_blank(),
+                                   panel.border = element_rect(colour = "black", fill = NA),
+                                   strip.text.x = element_text(size = 14,face = "italic")  )
 
 
 
-p2_de<-p2
+p2_fr<-p2
 
 
+gp <- ggplotGrob(p2_fr)
+
+# gp$layout #helps you to understand the gtable object 
+# gtable_show_layout(ggplotGrob(p)) #helps you to understand the gtable object 
+
+t_title <- gp$layout[gp$layout[['name']] == 'title' ,][['t']]
+t_strip <- gp$layout[grepl('strip', gp$layout[['name']]),][['t']]
+
+gp$layout[gp$layout[['name']] == 'title' ,][['t']] <- unique(t_strip)
+gp$layout[gp$layout[['name']] == 'title' ,][['b']] <- unique(t_strip)
+gp$layout[grepl('strip', gp$layout[['name']]),][['t']] <- t_title
+gp$layout[grepl('strip', gp$layout[['name']]),][['b']] <- t_title
 
 
 
@@ -512,7 +489,6 @@ gat<-rbind(gat1, gat2)
 gat<-gat[!gat$parameter %in% c("alpha", "beta" , "tau"), ]
 
 
-
 make_label <- function(value) {
   x <- as.character(value)
   bquote(italic(.(x))~subjects)
@@ -524,7 +500,6 @@ plot_labeller <- function(variable, value) {
 
 
 gat<-gat[,1:2]
-
 # gat_prior<-gat
 # gat_prior$value <-c(prior_phi, prior_g0, prior_g1)
 # gat_prior$type <- "prior"
@@ -554,7 +529,7 @@ z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[L]^
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[H]^2"),fun = dinvgamma, args = list(shape = 0.01, scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "black", inherit.aes = F)
 z<-z+ facet_wrap( .~ factor(level ,  levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2")), ncol = 6, scales = "free",labeller = label_parsed) 
 z<- z + scale_shape_manual(labels =  parse_format())
-z <- z + labs(title = "Germany", 
+z <- z + labs(title = "France", 
               x = "Value",  y = "")+  theme_minimal() + theme(legend.position="none", plot.title = element_text(face = "italic",
                                                                                                                 size = 22, hjust = 0.5),
                                                               axis.text=element_text(size=8),
@@ -571,13 +546,13 @@ z <- z + labs(title = "Germany",
 
 
 
-w_de<-z 
+w_fr<-z 
+
 
 
 result7<- result[[6]]
 colnames(result7)<-c("state1", "state2", "t", "ite")
 result7<-data.frame(result7)
-
 
 xi_it_sub<-result7[result7$ite %in% seq(25000, 35000, 10),]
 xi_it_agg<-aggregate(xi_it_sub[,1:2], by = list(t = xi_it_sub$t), FUN = mean)
@@ -590,7 +565,7 @@ xi_it_agg_area<- xi_it_agg
 xi_it_agg_area$dd<- c(1, diff(xi_it_agg_area$state1))
 xi_it_agg_area<-xi_it_agg_area[(abs(xi_it_agg_area$dd) >=  0.20 ) ,]
 xi_it_agg_area$lead<-lead(xi_it_agg_area$t)
-xi_it_agg_area$lead[length(xi_it_agg_area$lead)]<- xi_it_agg$t[length(xi_it_agg$t)]+1
+xi_it_agg_area$lead[length(xi_it_agg_area$lead)]<- xi_it_agg$t[length(xi_it_agg$t)] +1
 
 q<- ggplot(xi_it_agg)+labs(x ="time", y = "State", colour = "State")
 #q<- q + geom_point(aes(x = t, y = State), color ="#ff420f", shape = 15 , size = 0.1)
@@ -601,7 +576,7 @@ q<- q + geom_point(data = xi_it_agg , aes(x = t,  y= as.numeric(State)), size = 
 # q<- q + geom_rect(aes(xmin = t, xmax = lead(t), 
 #                       ymin = 0, ymax  = 1-(as.numeric(State)-1)), col ="red", alpha = 0.01)
 # 
-q<- q + labs(title = "Germany",
+q<- q + labs(title = "France",
              x = "Time", y = "P.P. - State H")+ theme_minimal() + theme(legend.position="bottom", plot.title = element_text(face = "italic",
                                                                                                                             size = 36, hjust = 0.5),
                                                                         strip.text.x = element_text(size = 24,face = "italic"),
@@ -619,7 +594,7 @@ q<- q + labs(title = "Germany",
 
 
 
-q_de<- q
+q_fr<- q
 
 
 
@@ -648,7 +623,7 @@ melted_cormat$Var2 <- factor(melted_cormat$Var2 ,labels = c("H","L"))
 
 # Create a ggheatmap
 ggheatmap1 <- ggplot(melted_cormat, aes(Var1, Var2, fill = value))+
-  geom_tile(color = "white")+ labs(x= "States", y ="States", title = "Germany" )+
+  geom_tile(color = "white")+ labs(x= "States", y ="States", title = "France" )+
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1,1), space = "Lab", 
                        name="Pearson\nCorrelation") +
@@ -656,6 +631,7 @@ ggheatmap1 <- ggplot(melted_cormat, aes(Var1, Var2, fill = value))+
   geom_text(aes(Var2, Var1, label = value), color = "black", size = 8) + theme(legend.position="none", plot.title = element_text(face = "italic",
                                                                                                                                  size = 22, hjust = 0.5),
                                                                                strip.text.x = element_text(size = 24,face = "italic"),
+                                                                               strip.placement = 'outside',
                                                                                
                                                                                axis.title = element_text( face = "italic",size = rel(1)),
                                                                                axis.title.y = element_text(size = 22, angle=90,vjust =2),
@@ -668,7 +644,7 @@ ggheatmap1 <- ggplot(melted_cormat, aes(Var1, Var2, fill = value))+
 
 
 
-ggheatmap_de <- ggheatmap1
+ggheatmap_fr <- ggheatmap1
 
 
-
+###########################

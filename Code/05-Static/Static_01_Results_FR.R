@@ -16,13 +16,13 @@ library(RcppArmadillo)
 library(data.table)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
-### expected running time approximately 45 mins on a MacBook Air M2
+### expected running time approximately 80 mins on a MacBook Air M2
 
 
-sourceCpp("Code/05-Static/Rcpp_rf_sp.cpp")
-load("Data/Static/Data_Env_single_SP.RData")
+sourceCpp("Code/05-Static/Rcpp_rf_fr.cpp")
+load("Data/Static/Data_Env_single_FR.RData")
 
 
 EL_x$ith_jth<-paste0(EL_x$ith,"_",EL_x$jth)
@@ -36,19 +36,14 @@ DBplane$leaning<- (DBplane$leaning - (min(DBplane$leaning)-0.01))/((max(DBplane$
 
 pages_names<- c(unique(EL_x$i)) # a vector of page names
 
+
+# library(plyr)
+
 #Main Dimensions
-N<- length(unique(EL_x$i_j)) #number of edges
-M<- length(unique(EL_x$i_j))/2 #number of unique edges
-Time<- 1 #number of unique dates
-Npages<- length(pages_names) #number of unique pages
-K <- 2 #number of states
-
-
-#rm(EL)
-
-EL_princ<-EL_princ[order(EL_princ$ith,EL_princ$jth),]
-
-
+N<- length(EL_x$ith) #number of edges
+M<- length(EL_x$jth)/2 #number of unique edges
+Npages<- length(DBplane$i) #number of unique pages
+K<-2
 
 DBplane<-DBplane[order(DBplane$i),]
 
@@ -57,6 +52,10 @@ DBplane<-DBplane[order(DBplane$i),]
 
 pages_names<- c(unique(EL_x$i)) # a vector of page names
 beta  = rep(0, Npages)
+
+
+Time <-1
+#rm(EL)
 
 #parameter for Beta 
 #gamma prior
@@ -201,10 +200,11 @@ result<- MCMC(
 end_time <- Sys.time()
 end_time-start_time
 
-save(result, file = "Code/05-Static/RESULT_single_sp.RData")
+save(result, file = "Code/05-Static/RESULT_single_fr.RData")
 
 ##################
 ######PLOTS#######
+
 
 list.of.packages <- c( "ggplot2", "ggrepel", "tidyr", "dplyr", "data.table", "patchwork", "ggpubr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -219,46 +219,46 @@ library(data.table)
 library(patchwork)
 library(ggpubr)
 
+
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 
-load("Code/05-Static/RESULT_single_sp.RData")
-load("Data/Static/Data_Env_single_SP.RData")
+load("Code/05-Static/RESULT_single_fr.RData")
+load("Data/Static/Data_Env_single_FR.RData")
 source("Code/05-Static/Misc/CoordCartesian.R")
 
+pages_names_fr<- c(unique(EL_x$i)) # a vector of page names
 
-pages_names_sp<- c(unique(EL_x$i)) # a vector of page names
+top_names<-c("TF1", "Le Figaro",  "BFMTV",  "L'Express" , "Le Monde", "Libération",  "Mediapart")
 
-beta_sp<- result[[1]]
+beta_fr<- result[[1]]
 
-zeta_sp<- result[[3]]
-zeta_sp<-data.frame(zeta_sp)
-colnames(zeta_sp) <-c("X1","X2", "i", "it")
+zeta_fr<- result[[3]]
+zeta_fr<-data.frame(zeta_fr)
+colnames(zeta_fr) <-c("X1","X2", "i", "it")
 
-zeta_sp_sub <-zeta_sp[zeta_sp$it %in% seq(2000, 15000, 1), ]
+zeta_fr_sub <-zeta_fr[zeta_fr$it %in% seq(2000, 15000, 1), ]
 
-agg_zeta_sp<-aggregate(zeta_sp_sub[,1:2], by = list(zeta_sp_sub$i), FUN = mean )
-agg_beta_sp<-colMeans(beta_sp[seq(2000, 15000, 1), ])
-agg_zeta_sp$names<- pages_names_sp
+agg_zeta_fr<-aggregate(zeta_fr_sub[,1:2], by = list(zeta_fr_sub$i), FUN = mean )
+agg_beta_fr<-colMeans(beta_fr[seq(2000, 15000, 1), ])
+agg_zeta_fr$names<- pages_names_fr
 
-zeta_sp_sub <-zeta_sp[zeta_sp$it %in% seq(2000, 15000, 1), ]
-zeta_sp<-zeta_sp[,-2]
-# check<-reshape(zeta_sp, idvar = "it", timevar = "i", direction = "wide")
+
+zeta_fr_sub <-zeta_fr[zeta_fr$it %in% seq(2000, 15000, 1), ]
+zeta_fr<-zeta_fr[,-2]
+# check<-reshape(zeta_fr, idvar = "it", timevar = "i", direction = "wide")
 # check<-check[,-1]
-# plot(c(as.matrix(check[2000:15000,])), c(beta_sp[2000:15000,]), pch = ".")
+# plot(c(as.matrix(check[2000:15000,])), c(beta_fr[2000:15000,]), pch = ".")
+# 
 
-
-top_names<- c("ABC.es", "El Mundo", "Antena 3", "La Vanguardia", "El País" )
-
-
-db_sp<-data.frame(agg_zeta_sp= agg_zeta_sp$X1,agg_beta_sp= agg_beta_sp, names=pages_names_sp )
-p4<-ggplot(db_sp, aes(x = agg_zeta_sp, y = agg_beta_sp, label = names))
-p4<- p4+ geom_point(col = "#ff420f", size = 1) 
-p4<- p4 + geom_text_repel(data = db_sp[db_sp$names %in% top_names,] ,size = 2,  min.segment.length = 0)  + labs( x = "Latent Leaning", y = "Individual Effect", y = "FE", title = "Spain", col = "white")
-p4 <- p4 + theme(panel.grid = element_blank())  + xlim(-2.5,2.5) +ylim(-2,7)
-p4 <- p4 + theme_minimal() + theme(legend.position="none", plot.title = element_text(face = "italic",
+db_fr<-data.frame(agg_zeta_fr= agg_zeta_fr$X1,agg_beta_fr= agg_beta_fr, names=pages_names_fr )
+p2<-ggplot(db_fr, aes(x = agg_zeta_fr, y = agg_beta_fr, label = names))
+p2<- p2+ geom_point(col = "#ff420f", size = 1) 
+p2<- p2 + geom_text_repel(data = db_fr[db_fr$names %in% top_names,] ,size = 2,  min.segment.length = 0)  + labs(  x = "Latent Leaning", y = "Individual Effect", title = "France", col = "white")
+p2 <- p2 + theme(panel.grid = element_blank())  + xlim(-2.5,2.5) +ylim(-2,7)
+p2 <- p2 + theme_minimal() + theme(legend.position="none", plot.title = element_text(face = "italic",
                                                                                      size = 22, hjust = 0.5),
                                    strip.text.x = element_text(size = 24,face = "italic"),
                                    
@@ -273,17 +273,9 @@ p4 <- p4 + theme_minimal() + theme(legend.position="none", plot.title = element_
 
 
 
-p4
+p2
 
-ggsave(p4, filename = "Figures/Static/latent_static_fe_de.pdf", units = "cm", width = 16*2, height = 9*2 )
-
-
-pew_sp<- agg_zeta_sp[agg_zeta_sp$names %in% c("ABC.es", "El Mundo", "Antena 3", "La Vanguardia", "El País" ),]
-pew_sp$X1<- pew_sp$X1 -  mean(pew_sp$X1)
-pew_sp$score_a<- c(4.5, 3.8, 4.2, 3.4, 3.5)
-pew_sp$score_b<- c(3.3, 3.1, 3.2, 3.1, 2.8)
-
-
+ggsave(p2, filename = "Figures/Static/latent_static_fe_fr.pdf", units = "cm", width = 16*2, height = 9*2 )
 
 
 result3<- result[[2]]
@@ -291,7 +283,6 @@ result3<- result[[2]]
 colnames(result3)<-c("phi", "gamma_0", "gamma_1", "tau", "ite")
 result3<-data.frame(result3)
 result3$gamma_1<-(result3$gamma_1)
-
 
 gat1<-gather(result3[result3$ite %in% seq(5000, 15000, 5 ),1:4], key = "parameter", value = "value")
 
@@ -313,6 +304,7 @@ plot_labeller <- function(variable, value) {
 }
 
 
+
 colnames(gat)[1]<-"level"
 
 z <- ggplot(gat,  aes(x=value) )
@@ -324,7 +316,7 @@ z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[0]"
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 5), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "black")
 z<-z+geom_hline(yintercept = -0.001, color ="white", size = 1.1)
 z<- z + scale_shape_manual(labels =  parse_format())
-z <- z + labs(title = "Spain", 
+z <- z + labs(title = "France", 
               x = "Value",  y = "")+  theme_minimal() + theme(legend.position="none", plot.title = element_text(face = "italic",
                                                                                                                 size = 22, hjust = 0.5),
                                                               axis.text=element_text(size=8),
@@ -341,7 +333,7 @@ z <- z + labs(title = "Spain",
 
 
 
-w_sp<-z +  coord_cartesian_panels(
+w_fr<-z +  coord_cartesian_panels(
   panel_limits = tibble::tribble(
     ~level, ~xmin, ~xmax,
     "gamma[0]"     ,   mean(gat$value[gat$parameter == "gamma[0]" & gat$type == "posterior" ]) - 5*sd(gat$value[gat$parameter == "gamma[0]" & gat$type == "posterior" ]) ,      mean(gat$value[gat$parameter == "gamma[0]" & gat$type == "posterior" ]) + 5*sd(gat$value[gat$parameter == "gamma[0]" & gat$type == "posterior" ]),
@@ -349,8 +341,12 @@ w_sp<-z +  coord_cartesian_panels(
     "phi"     ,   0,     mean(gat$value[gat$parameter == "phi" & gat$type == "posterior" ]) + 7*sd(gat$value[gat$parameter == "phi" & gat$type == "posterior" ])
     
   ))
-w_sp
 
-#pew_sp$X1<- pew_sp$X1 -  mean(pew_sp$X1)
-pew_sp$score_a<- pew_sp$score_a -  mean(pew_sp$score_a)
 
+pew_fr<- agg_zeta_fr[agg_zeta_fr$names %in% c("TF1", "Le Figaro",  "BFMTV",  "L'Express" , "Le Monde", "Libération",  "Mediapart"), ]
+pew_fr$score_a<- c(3.7, 3.4, 4, 3.3, 2.5, 2.3, 4.1)
+pew_fr$score_b<- c(3.2,2.9,3.3,2.9, 2.5,2.4, 3.3)
+
+
+#pew_fr$X1<- pew_fr$X1 -  mean(pew_fr$X1)
+pew_fr$score_a<- pew_fr$score_a -  mean(pew_fr$score_a)

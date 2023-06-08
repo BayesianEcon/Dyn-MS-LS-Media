@@ -18,7 +18,7 @@ library(RcppParallel)
 library(RcppArmadillo)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 Multi <- function(x){m<-rmultinom(1, size = 1, prob = x)
@@ -34,7 +34,7 @@ softmax <- function (x) {exp(x - log_sum_exp(x))} #define softmax function
 
 
 load("Data/Dynamic/DataEnv_SP_all.RData")
-sourceCpp("Code/Model/JASA_MS_LS_FE.cpp")
+sourceCpp("Code/Model/MS_LS_FE.cpp")
 
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
@@ -302,7 +302,7 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 

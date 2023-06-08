@@ -18,13 +18,13 @@ library(RcppParallel)
 library(RcppArmadillo)
 ############## Synthetic Data Generation #######################
 
-source("Code/04-Simulation/JASA_Simulation_01_dgp.R")
+source("Code/04-Simulation/Simulation_01_dgp.R")
 
 ############## Gibbs Sampler #######################
 ############## Preliminaries #######################
 
-load("Data/Simulation/JASA_SimulationEnv_FE.RData")
-sourceCpp("Code/Model/JASA_MS_LS_FE.cpp")
+load("Data/Simulation/SimulationEnv_FE.RData")
+sourceCpp("Code/Model/MS_LS_FE.cpp")
 
 
 Multi <- function(x){m<-rmultinom(1, size = 1, prob = x)
@@ -246,27 +246,27 @@ if(rg_eq == 0){
 
 if(interp_eq ==1 & ms_eq== 1){
   
-  save(result, file = "Code/04-Simulation/RESULT_Sim_JASA.RData")
+  save(result, file = "Code/04-Simulation/RESULT_Sim.RData")
   
   
 }else if(interp_eq ==0 & ms_eq== 1){
   
-  save(result, file = "Code/04-Simulation/RESULT_Sim_JASA_no_interp.RData")
+  save(result, file = "Code/04-Simulation/RESULT_Sim_no_interp.RData")
   
 }else if(interp_eq ==1 & ms_eq== 0){
   
-  save(result, file = "Code/04-Simulation/RESULT_Sim_JASA_no_ms.RData")
+  save(result, file = "Code/04-Simulation/RESULT_Sim_no_ms.RData")
   
 }else if(interp_eq ==0 & ms_eq== 0){
   
-  save(result, file = "Code/04-Simulation/RESULT_Sim_JASA_no_ms_no_int.RData")
+  save(result, file = "Code/04-Simulation/RESULT_Sim_no_ms_no_int.RData")
   
 }
 
   
 }else{
   
-  save(result, file = "Code/Simulation/RESULT_Sim_JASA_rg.RData")
+  save(result, file = "Code/Simulation/RESULT_Sim_rg.RData")
   
 }
 
@@ -275,7 +275,7 @@ if(interp_eq ==1 & ms_eq== 1){
 ########Plotting####### 
 # Plots are designed for our Model (options: interp_eq = 1, ms_eq = 1, rg_eq = 0)
 
-load("Code/04-Simulation/RESULT_Sim_JASA.RData")
+load("Code/04-Simulation/RESULT_Sim.RData")
 
 list.of.packages <- c("ggplot2", "ggpubr", "patchwork", "tidyr", "scales")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -851,7 +851,7 @@ if(length(new.packages)) install.packages(new.packages)
 
 
 library(LaplacesDemon)
-load("Code/04-Simulation/RESULT_Sim_JASA_50kite.RData")
+load("Code/04-Simulation/RESULT_Sim_50kite.RData")
 
 
 

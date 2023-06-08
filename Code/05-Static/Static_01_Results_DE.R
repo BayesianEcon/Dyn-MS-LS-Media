@@ -16,7 +16,7 @@ library(RcppArmadillo)
 library(data.table)
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 ### expected running time approximately 45.19719 mins on a MacBook Air M2
 
@@ -219,7 +219,7 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/RepositoryJASA/")
+setwd("~/Desktop/Repository/")
 #####################################
 
 
