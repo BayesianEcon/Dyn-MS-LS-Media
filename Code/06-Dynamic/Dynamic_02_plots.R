@@ -27,7 +27,7 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/Repository/")
+setwd("~/Documents/GitHub/Dyn-MS-LS-Media/")
 #####################################
 
 source("Code/05-Static/Misc/CoordCartesian.R")
@@ -197,7 +197,7 @@ colnames(result3)<-c("phi", "gamma_0", "gamma_1", "tau", "ite")
 result3<-data.frame(result3)
 
 
-gat1<-gather(result3[result3$ite %in% seq(20000, 35000, 10 ),1:4], key = "parameter", value = "value")
+gat1<-gather(result3[result3$ite %in% seq(25000, 35000, 10 ),1:4], key = "parameter", value = "value")
 
 result8<-data.frame(result$Sigma_z_ite)
 result8$X1<- result8$X1^2
@@ -207,7 +207,7 @@ result8$sb_mean <- cumsum(result8$X2)/(1:length(result8$X2))
 result8$ite<- 1:length(result8$X2)
 
 
-gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 1 ),1:2], key = "parameter", value = "value")
+gat2<-gather(result8[result8$ite %in% seq(25000, 35000, 1 ),1:2], key = "parameter", value = "value")
 gat2$parameter<-factor(gat2$parameter, levels=c("X2","X1"), labels = c("sigma[L]^2","sigma[H]^2"))
 
 gat1$parameter<-factor(gat1$parameter)
@@ -239,6 +239,9 @@ colnames(gat)[1]<-"level"
 
 gat$type <- "posterior"
 gat$level<-factor(gat$level, levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2"))
+
+gat_de<- gat
+gat_de$country <- "Germany"
 
 
 sturges <- function(x){ pretty(range(x),
@@ -551,7 +554,7 @@ colnames(result3)<-c("phi", "gamma_0", "gamma_1", "tau", "ite")
 result3<-data.frame(result3)
 
 
-gat1<-gather(result3[result3$ite %in% seq(20000, 35000, 10 ),1:4], key = "parameter", value = "value")
+gat1<-gather(result3[result3$ite %in% seq(25000, 35000, 10 ),1:4], key = "parameter", value = "value")
 
 result8<-data.frame(result$Sigma_z_ite)
 result8$X1<- result8$X1^2
@@ -561,7 +564,7 @@ result8$sb_mean <- cumsum(result8$X2)/(1:length(result8$X2))
 result8$ite<- 1:length(result8$X2)
 
 
-gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 1 ),1:2], key = "parameter", value = "value")
+gat2<-gather(result8[result8$ite %in% seq(25000, 35000, 1 ),1:2], key = "parameter", value = "value")
 gat2$parameter<-factor(gat2$parameter, levels=c("X2","X1"), labels = c("sigma[L]^2","sigma[H]^2"))
 
 gat1$parameter<-factor(gat1$parameter)
@@ -592,6 +595,8 @@ colnames(gat)[1]<-"level"
 gat$type <- "posterior"
 gat$level<-factor(gat$level, levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2"))
 
+gat_fr<- gat
+gat_fr$country <- "France"
 
 sturges <- function(x){ pretty(range(x),
                                n = nclass.Sturges(x),
@@ -893,7 +898,7 @@ colnames(result3)<-c("phi", "gamma_0", "gamma_1", "tau", "ite")
 result3<-data.frame(result3)
 
 
-gat1<-gather(result3[result3$ite %in% seq(20000, 35000, 10 ),1:4], key = "parameter", value = "value")
+gat1<-gather(result3[result3$ite %in% seq(25000, 35000, 10 ),1:4], key = "parameter", value = "value")
 
 result8<-data.frame(result$Sigma_z_ite)
 result8$X1<- result8$X1^2
@@ -903,7 +908,7 @@ result8$sb_mean <- cumsum(result8$X2)/(1:length(result8$X2))
 result8$ite<- 1:length(result8$X2)
 
 
-gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 10 ),1:2], key = "parameter", value = "value")
+gat2<-gather(result8[result8$ite %in% seq(25000, 35000, 1 ),1:2], key = "parameter", value = "value")
 gat2$parameter<-factor(gat2$parameter, levels=c("X2","X1"), labels = c("sigma[L]^2","sigma[H]^2"))
 
 
@@ -936,6 +941,9 @@ colnames(gat)[1]<-"level"
 gat$type <- "posterior"
 gat$level<-factor(gat$level, levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2"))
 
+
+gat_it<- gat
+gat_it$country <- "Italy"
 
 sturges <- function(x){ pretty(range(x),
                                n = nclass.Sturges(x),
@@ -1229,7 +1237,7 @@ colnames(result3)<-c("phi", "gamma_0", "gamma_1", "tau", "ite")
 result3<-data.frame(result3)
 
 
-gat1<-gather(result3[result3$ite %in% seq(20000, 35000, 10 ),1:4], key = "parameter", value = "value")
+gat1<-gather(result3[result3$ite %in% seq(25000, 35000, 10 ),1:4], key = "parameter", value = "value")
 
 result8<-data.frame(result$Sigma_z_ite)
 result8$X1<- result8$X1^2
@@ -1239,7 +1247,7 @@ result8$sb_mean <- cumsum(result8$X2)/(1:length(result8$X2))
 result8$ite<- 1:length(result8$X2)
 
 
-gat2<-gather(result8[result8$ite %in% seq(30000, 50000, 1 ),1:2], key = "parameter", value = "value")
+gat2<-gather(result8[result8$ite %in% seq(25000, 35000, 1 ),1:2], key = "parameter", value = "value")
 gat2$parameter<-factor(gat2$parameter, levels=c("X2","X1"), labels = c("sigma[L]^2","sigma[H]^2"))
 
 
@@ -1272,6 +1280,9 @@ colnames(gat)[1]<-"level"
 
 gat$type <- "posterior"
 gat$level<-factor(gat$level, levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2"))
+
+gat_sp<- gat
+gat_sp$country <- "Spain"
 
 
 sturges <- function(x){ pretty(range(x),
@@ -1418,6 +1429,130 @@ w<- (w_fr|w_de)/(w_it|w_sp) & theme(axis.text=element_text(size= 6), axis.text.x
 w
 
 ggsave(w, filename = "Figures/Dynamic/Figure8.pdf", units = "cm", width = 16*2, height = 9*2 )
+
+
+##########
+#figure 8 v2
+
+gat_all<-rbind(gat_fr, gat_de, gat_it, gat_sp)
+
+sturges <- function(x){ pretty(range(x),
+                               n = nclass.Sturges(x),
+                               min.n = 1)}
+
+z <- ggplot(gat_all,  aes(x=value, group = country, linetype = country )) +  geom_density(fill = "#ff420f", alpha = 0.3)  + facet_wrap(.~level, scales = "free",  labeller = label_parsed)
+z<- z + geom_hline(yintercept = 0 , col = "white", linewidth = 1)
+# z <-  z+ geom_histogram(data = gat[gat$level == "gamma[0]",], aes( y = after_stat(density)), binwidth=0.1, fill = "#ff420f", alpha = 0.6 , col ="black", breaks = sturges(gat[gat$level == "gamma[0]","value"] ) ) 
+# z <- z+ geom_histogram(data = gat[gat$level == "gamma[1]",],  aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "gamma[1]","value"] ) ) 
+# z <- z+ geom_histogram(data = gat[gat$level == "phi",],   aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "phi","value"] ) ) 
+# z <- z+ geom_histogram(data = gat[gat$level == "sigma[L]^2",],   aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "sigma[L]^2","value"] ) ) 
+# z <- z+ geom_histogram(data = gat[gat$level == "sigma[H]^2",],   aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "sigma[H]^2","value"] ) ) 
+# z<- z + geom_density(linetype = 1,  n = 10000, adjust = 2)
+z <- z + scale_linetype_manual(values=c("solid", "twodash", "dotted", "dashed")) 
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "phi") , fun = dgamma, args = list(shape=0.01, rate =0.01), geom = "area", fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[0]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[L]^2"),fun = dinvgamma, args = list(shape = 0.01 ,scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[H]^2"),fun = dinvgamma, args = list(shape = 0.01, scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+#z<-z+ facet_wrap( .~ factor(level ,  levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2")), ncol = 6, scales = "free",labeller = label_parsed)
+# z<- z + scale_shape_manual(labels =  parse_format())
+z <- z + labs(x = "Value",  y = "", linetype="Country")+  theme_minimal() + theme( legend.direction = "vertical", plot.title = element_text(face = "italic",
+                                                                                                                size = 22, hjust = 0.5),
+                                                              legend.key.size = unit(1.5, 'cm'),
+                                                              legend.title = element_text(size=20), #change legend title font size
+                                                              legend.text = element_text(size=18),
+                                                              axis.text=element_text(size=8),
+                                                              strip.text.x = element_text(size = 18, face = "italic"),
+                                                              axis.title.x = element_blank(),
+                                                              axis.title.y = element_text(size = 22, angle=90,vjust =2, face = "italic"),
+                                                              axis.line = element_blank(),
+                                                              axis.ticks = element_line(),
+                                                              axis.ticks.x  = element_line(),
+                                                              panel.spacing.x = unit(4, "mm"),
+                                                              panel.grid = element_blank(),
+                                                              panel.border = element_rect(colour = "black", fill = NA))
+
+
+
+
+w_all<-z + guides(linetype=guide_legend(ncol=2))
+
+
+library(gtable)
+library(cowplot)
+
+shift_legend <- function(p){
+  
+  # check if p is a valid object
+  if(!"gtable" %in% class(p)){
+    if("ggplot" %in% class(p)){
+      gp <- ggplotGrob(p) # convert to grob
+    } else {
+      message("This is neither a ggplot object nor a grob generated from ggplotGrob. Returning original plot.")
+      return(p)
+    }
+  } else {
+    gp <- p
+  }
+  
+  # check for unfilled facet panels
+  facet.panels <- grep("^panel", gp[["layout"]][["name"]])
+  empty.facet.panels <- sapply(facet.panels, function(i) "zeroGrob" %in% class(gp[["grobs"]][[i]]))
+  empty.facet.panels <- facet.panels[empty.facet.panels]
+  if(length(empty.facet.panels) == 0){
+    message("There are no unfilled facet panels to shift legend into. Returning original plot.")
+    return(p)
+  }
+  
+  # establish extent of unfilled facet panels (including any axis cells in between)
+  empty.facet.panels <- gp[["layout"]][empty.facet.panels, ]
+  empty.facet.panels <- list(min(empty.facet.panels[["t"]]), min(empty.facet.panels[["l"]]),
+                             max(empty.facet.panels[["b"]]), max(empty.facet.panels[["r"]]))
+  names(empty.facet.panels) <- c("t", "l", "b", "r")
+  
+  # extract legend & copy over to location of unfilled facet panels
+  guide.grob <- which(gp[["layout"]][["name"]] == "guide-box")
+  if(length(guide.grob) == 0){
+    message("There is no legend present. Returning original plot.")
+    return(p)
+  }
+  gp <- gtable_add_grob(x = gp,
+                        grobs = gp[["grobs"]][[guide.grob]],
+                        t = empty.facet.panels[["t"]],
+                        l = empty.facet.panels[["l"]],
+                        b = empty.facet.panels[["b"]],
+                        r = empty.facet.panels[["r"]],
+                        name = "new-guide-box")
+  
+  # squash the original guide box's row / column (whichever applicable)
+  # & empty its cell
+  guide.grob <- gp[["layout"]][guide.grob, ]
+  if(guide.grob[["l"]] == guide.grob[["r"]]){
+    gp <- gtable_squash_cols(gp, cols = guide.grob[["l"]])
+  }
+  if(guide.grob[["t"]] == guide.grob[["b"]]){
+    gp <- gtable_squash_rows(gp, rows = guide.grob[["t"]])
+  }
+  gp <- gtable_remove_grobs(gp, "guide-box")
+  
+  return(gp)
+}
+
+library(grid)
+
+
+## Initiate writing to PDF file
+pdf("Figures/Dynamic/Figure8_v2.pdf",  width = 16, height = 9)
+
+## Create a graphical object g here
+grid.draw(shift_legend(w_all))
+# print it
+
+## Stop writing to the PDF file
+dev.off()
+
+##########
+
 
 pp<- (p2_fr/p2_de/p2_it/p2_sp)  & theme(axis.title = element_text(size = 16) )
 pp<- (wrap_ggplot_grob(gp)/p2_de/p2_it/p2_sp)  & theme(axis.title = element_text(size = 16) )
