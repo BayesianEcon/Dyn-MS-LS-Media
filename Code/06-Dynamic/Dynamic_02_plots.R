@@ -1440,7 +1440,7 @@ sturges <- function(x){ pretty(range(x),
                                n = nclass.Sturges(x),
                                min.n = 1)}
 
-z <- ggplot(gat_all,  aes(x=value, group = country, linetype = country )) +  geom_density(fill = "#ff420f", alpha = 0.3)  + facet_wrap(.~level, scales = "free",  labeller = label_parsed)
+z <- ggplot(gat_all,  aes(x=value, group = country, linetype = country )) +  geom_density(fill = "#ff420f", alpha = 0.3,  adjust = 2)  + facet_wrap(.~level, scales = "free",  labeller = label_parsed)
 z<- z + geom_hline(yintercept = 0 , col = "white", linewidth = 1)
 # z <-  z+ geom_histogram(data = gat[gat$level == "gamma[0]",], aes( y = after_stat(density)), binwidth=0.1, fill = "#ff420f", alpha = 0.6 , col ="black", breaks = sturges(gat[gat$level == "gamma[0]","value"] ) ) 
 # z <- z+ geom_histogram(data = gat[gat$level == "gamma[1]",],  aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "gamma[1]","value"] ) ) 
@@ -1449,11 +1449,11 @@ z<- z + geom_hline(yintercept = 0 , col = "white", linewidth = 1)
 # z <- z+ geom_histogram(data = gat[gat$level == "sigma[H]^2",],   aes( y = after_stat(density)), binwidth=0.01, fill = "#ff420f", alpha = 0.6 , col ="black" ,  breaks = sturges(gat[gat$level == "sigma[H]^2","value"] ) ) 
 # z<- z + geom_density(linetype = 1,  n = 10000, adjust = 2)
 z <- z + scale_linetype_manual(values=c("solid", "twodash", "dotted", "dashed")) 
-z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "phi") , fun = dgamma, args = list(shape=0.01, rate =0.01), geom = "area", fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
-z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[0]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
-z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
-z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[L]^2"),fun = dinvgamma, args = list(shape = 0.01 ,scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
-z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, level = "sigma[H]^2"),fun = dinvgamma, args = list(shape = 0.01, scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, type = "prior", level = "phi") , fun = dgamma, args = list(shape=0.01, rate =0.01), geom = "area", fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, type = "prior", level = "gamma[0]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3, linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, type = "prior", level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 15^2), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, type = "prior", level = "sigma[L]^2"),fun = dinvgamma, args = list(shape = 0.01 ,scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, type = "prior", level = "sigma[H]^2"),fun = dinvgamma, args = list(shape = 0.01, scale=0.01), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "red", inherit.aes = F)
 #z<-z+ facet_wrap( .~ factor(level ,  levels = c("gamma[0]", "gamma[1]", "phi", "sigma[L]^2", "sigma[H]^2")), ncol = 6, scales = "free",labeller = label_parsed)
 # z<- z + scale_shape_manual(labels =  parse_format())
 z <- z + labs(x = "Value",  y = "", linetype="Country")+  theme_minimal() + theme( legend.direction = "vertical", plot.title = element_text(face = "italic",
@@ -1475,7 +1475,16 @@ z <- z + labs(x = "Value",  y = "", linetype="Country")+  theme_minimal() + them
 
 
 
-w_all<-z + guides(linetype=guide_legend(ncol=2))
+z<-z + guides(linetype=guide_legend(ncol=2))
+
+w_all<-z +  coord_cartesian_panels(
+  panel_limits = tibble::tribble(
+    ~level, ~xmin, ~xmax,
+    "gamma[0]"     ,   mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]),
+    "gamma[1]"     , mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]),
+    "phi"     ,     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]),     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ])
+    
+  ))
 
 
 library(gtable)

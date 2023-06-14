@@ -20,7 +20,7 @@ library(ggpubr)
 
 
 ########CHANGE YOUR PATH ###########
-setwd("~/Desktop/Repository/")
+setwd("~/Documents/GitHub/Dyn-MS-LS-Media/")
 #####################################
 
 
@@ -121,13 +121,15 @@ gat<-gat[,1:2]
 # gat_prior<-gat
 # gat_prior$value <-c(prior_phi, prior_g0, prior_g1)
 # gat_prior$type <- "prior"
-gat$type <- "posterior"
-
 # gat<-rbind(gat, gat_prior)
 
 
 
 colnames(gat)[1]<-"level"
+
+gat_de<- gat
+gat_de$country <- "Germany"
+
 
 z <- ggplot(gat,  aes(x=value) )
 z<- z + geom_histogram( aes(y = after_stat(density)),fill = "#ff420f", alpha = 0.6 , col ="black", bins = 20)
@@ -285,6 +287,10 @@ plot_labeller <- function(variable, value) {
 
 colnames(gat)[1]<-"level"
 
+gat_fr<- gat
+gat_fr$country <- "France"
+
+
 z <- ggplot(gat,  aes(x=value) )
 z<- z + geom_histogram( aes(y = after_stat(density)),fill = "#ff420f", alpha = 0.6 , col ="black", bins = 20)
 z<- z + geom_density(linetype = 1, adjust = 1.5, n = 10000)
@@ -408,6 +414,10 @@ plot_labeller <- function(variable, value) {
 
 
 colnames(gat)[1]<-"level"
+
+gat_it<- gat
+gat_it$country <- "Italy"
+
 
 z <- ggplot(gat,  aes(x=value) )
 z<- z + geom_histogram( aes(y = after_stat(density)),fill = "#ff420f", alpha = 0.6 , col ="black", bins = 20)
@@ -545,6 +555,9 @@ plot_labeller <- function(variable, value) {
 
 colnames(gat)[1]<-"level"
 
+gat_sp<- gat
+gat_sp$country <- "Spain"
+
 z <- ggplot(gat,  aes(x=value) )
 z<- z + geom_histogram( aes(y = after_stat(density)),fill = "#ff420f", alpha = 0.6 , col ="black", bins = 20)
 z<- z + geom_density(linetype = 1, adjust = 1.5, n = 10000)
@@ -638,3 +651,48 @@ w
 ggsave(w, filename = "Figures/Static/FigureI1.pdf", units = "cm", width = 16*2, height = 9*2 )
 
 ##########
+
+gat_all<-rbind(gat_fr, gat_de, gat_it, gat_sp)
+gat_all$type<-"posterior"
+
+sturges <- function(x){ pretty(range(x),
+                               n = nclass.Sturges(x),
+                               min.n = 1)}
+
+z <- ggplot(gat_all,  aes(x=value,  group = country, linetype = country ) )
+z<- z + geom_density( adjust = 1.5, n = 10000, fill = "#ff420f", alpha = 0.3)
+z<-z+ facet_wrap( .~ level, ncol = 3, scales = "free",labeller = label_parsed)
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, country = "prior", level = "phi") , fun = dgamma, args = list(0.01, 0.01), geom = "area", fill ="black", alpha = 0.3, linetype = "dashed", colour = "black")
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0,  country = "prior", level = "gamma[0]"),fun = dnorm, args = list(mean = 0, sd = 5), geom = "area",fill ="black", alpha = 0.3, linetype = "dashed", colour = "black")
+z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0,  country = "prior", level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 5), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "black")
+z<-z+geom_hline(yintercept = -0.001, color ="white", size = 1.1)
+z<- z + scale_shape_manual(labels =  parse_format())
+z <- z + labs( x = "Value",  y = "", linetype="Country")+  theme_minimal() + theme(legend.position="bottom", plot.title = element_text(face = "italic",
+                                                                                                                size = 22, hjust = 0.5),
+                                                              axis.text=element_text(size=8),
+                                                              strip.text.x = element_text(size = 18, face = "italic"),
+                                                              axis.title.x = element_blank(),
+                                                              axis.title.y = element_text(size = 22, angle=90,vjust =2, face = "italic"),
+                                                              axis.line = element_blank(),
+                                                              axis.ticks = element_line(),
+                                                              axis.ticks.x  = element_line(),
+                                                              panel.spacing.x = unit(4, "mm"),
+                                                              panel.grid = element_blank(),
+                                                              panel.border = element_rect(colour = "black", fill = NA))
+
+
+
+
+w_all<-z +  coord_cartesian_panels(
+  panel_limits = tibble::tribble(
+    ~level, ~xmin, ~xmax,
+    "gamma[0]"     ,   mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]),
+    "gamma[1]"     , mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]),
+    "phi"     ,   0,     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) + 7*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ])
+    
+  ))
+
+ggsave(w_all, filename = "Figures/Static/FigureI1_v2.pdf", units = "cm", width = 16*2, height = 9*2 )
+
+
+#########
