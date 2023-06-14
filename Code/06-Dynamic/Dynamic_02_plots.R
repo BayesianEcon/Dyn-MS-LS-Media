@@ -1477,14 +1477,15 @@ z <- z + labs(x = "Value",  y = "", linetype="Country")+  theme_minimal() + them
 
 z<-z + guides(linetype=guide_legend(ncol=2))
 
-w_all<-z +  coord_cartesian_panels(
-  panel_limits = tibble::tribble(
-    ~level, ~xmin, ~xmax,
-    "gamma[0]"     ,   mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]),
-    "gamma[1]"     , mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]),
-    "phi"     ,     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]),     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ])
-    
-  ))
+w_all<-z
+# w_all<-z +  coord_cartesian_panels(
+#   panel_limits = tibble::tribble(
+#     ~level, ~xmin, ~xmax,
+#     "gamma[0]"     ,   mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[0]" & gat_all$type == "posterior" ]),
+#     "gamma[1]"     , mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) ,      mean(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "gamma[1]" & gat_all$type == "posterior" ]),
+#     "phi"     ,     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) - 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]),     mean(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ]) + 5*sd(gat_all$value[gat_all$parameter == "phi" & gat_all$type == "posterior" ])
+#     
+#   ))
 
 
 library(gtable)

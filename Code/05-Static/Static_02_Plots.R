@@ -665,6 +665,7 @@ z<-z+ facet_wrap( .~ level, ncol = 3, scales = "free",labeller = label_parsed)
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0, country = "prior", level = "phi") , fun = dgamma, args = list(0.01, 0.01), geom = "area", fill ="black", alpha = 0.3, linetype = "dashed", colour = "black")
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0,  country = "prior", level = "gamma[0]"),fun = dnorm, args = list(mean = 0, sd = 5), geom = "area",fill ="black", alpha = 0.3, linetype = "dashed", colour = "black")
 z<-z+  stat_function( data = data.frame(value = 0, yaxis = 0,  country = "prior", level = "gamma[1]"),fun = dnorm, args = list(mean = 0, sd = 5), geom = "area",fill ="black", alpha = 0.3,linetype = "dashed", colour = "black")
+z <- z + scale_linetype_manual(values=c("solid", "twodash", "dotted", "dashed")) 
 z<-z+geom_hline(yintercept = -0.001, color ="white", size = 1.1)
 z<- z + scale_shape_manual(labels =  parse_format())
 z <- z + labs( x = "Value",  y = "", linetype="Country")+  theme_minimal() + theme(legend.position="bottom", plot.title = element_text(face = "italic",
