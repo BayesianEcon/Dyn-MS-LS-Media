@@ -68,7 +68,7 @@ The following R scripts files allow us to plot the Figures reported in the main 
 Generates the introductory Graph reported in Figure 1
 
 * Properties_01.R
-Generates the contour plots reported in Figure 4
+Generates the contour plots reported in Figure I.1
 
 * Simulation_02_results.R
 Generates the figures of the synthetic data analysis (Figure 5, Figure D.1, Figure D.2, Figure D.3, Table D.1)
