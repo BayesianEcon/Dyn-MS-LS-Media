@@ -1,4 +1,4 @@
-
+ 
 rm(list = ls())
 
 #load the libraries
@@ -480,7 +480,7 @@ g<-(g1/g2/g3)+ plot_annotation(tag_levels = "A") & theme(plot.title = element_te
 
 g
 
-ggsave(g, file = "Figures/Properties/Figure4.pdf", width = 21, height = 29.7, unit = "cm")
+ggsave(g, file = "Figures/Properties/FigureA1.pdf", width = 21, height = 29.7, unit = "cm")
 
 
 
