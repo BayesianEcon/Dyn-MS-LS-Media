@@ -30,7 +30,7 @@ softmax <- function (x) {exp(x - log_sum_exp(x))} #define softmax function
 
 
 load("Data/Dynamic/DataEnv_FR_all.RData")
-sourceCpp("Code/Extended_MS_LS_FE.cpp")
+sourceCpp("Code/Model/Extended_MS_LS_FE.cpp")
 
 
 a<-data.frame(name= unique(EL_x$i), max_czeros = 0  )
