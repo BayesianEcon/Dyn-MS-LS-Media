@@ -7,7 +7,7 @@ AVAILABLE AT:    ..........
 
 PLEASE CITE AS:   ..........
 
-DATE:        May 2023
+DATE:        OCTOBER 2024
 
 
 Tested on R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
@@ -62,7 +62,7 @@ Running time ~13 mins
 
 
 
-The following R scripts files allow us to plot the Figures reported in the main text:
+The following R scripts files allow us to plot the Figures of a MS-LS model with D = 1 and K = 2:
 
 * Graph_01.R
 Generates the introductory Graph reported in Figure 1
@@ -77,7 +77,9 @@ Generates the figures of the synthetic data analysis (Figure 5, Figure D.1, Figu
 Generates the figures of the static data analysis (Figure 7, Figure I.1)
 
 * Dynamic_02_Plots.R
-Generates the figures of the static data analysis (Figure 8, Figure 9, Figure 10, Figure 11)
+Generates the figures of the dynamic data analysis (Figure 8, Figure 9, Figure 10, Figure 11)
+
+The  R scripts for a MS-LS model with D > 1 and K > 2 are contained in the Folder named "Extended".
 
 
 [Country] = DE,FR,IT,SP (*) with MacBook Air 2022 M2 
