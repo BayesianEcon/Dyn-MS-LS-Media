@@ -78,8 +78,11 @@ Generates the figures of the synthetic data analysis (Figure 5, Figure D.1, Figu
 Generates the figures of the static data analysis (Figure 7, Figure I.1)
 
 * Dynamic_02_Plots.R
-Generates the figures of the dynamic data analysis for an MS-LS with d = 1 and K = 2 (Figure 8, Figure 9, Figure 10, Figure 11)
-The  R scripts for a MS-LS model with D > 1 and K > 2 are contained in the Folder named "Extended".
+Generates the figures of the dynamic data analysis for an MS-LS with d = 1 and K = 2
+(Figure I.1, Figure I.2, Figure I.3, Figure I.4).
+
+The  R scripts for running an MS-LS model with D > 1 and K > 2
+are contained in the Folder named "Extended".
 
 [Country] = DE,FR,IT,SP (*) with MacBook Air 2022 M2 
 
