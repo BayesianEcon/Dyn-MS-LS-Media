@@ -45,8 +45,9 @@ setwd("~/Desktop/Repository/")
 -------------------------------------------------------------------------------
 
 
-The following R script files are used to estimate the Bayesian Markov-Switching Latent-Space network model 
-(hereafter MS-LS) on the datasets studied in the main paper (Section 3, Section 4, and Supplement):
+The following R script files are used to estimate the Bayesian Markov-Switching Latent-Space
+network model (hereafter MS-LS) on the datasets studied in the main paper.
+(Section 3, Section 4, and Supplement):
 
 * Dynamic_01_Results_[Country].R
 Estimates the MS-LS model on the dynamic network dataset.
@@ -77,10 +78,8 @@ Generates the figures of the synthetic data analysis (Figure 5, Figure D.1, Figu
 Generates the figures of the static data analysis (Figure 7, Figure I.1)
 
 * Dynamic_02_Plots.R
-Generates the figures of the dynamic data analysis (Figure 8, Figure 9, Figure 10, Figure 11)
-
+Generates the figures of the dynamic data analysis for an MS-LS with d = 1 and K = 2 (Figure 8, Figure 9, Figure 10, Figure 11)
 The  R scripts for a MS-LS model with D > 1 and K > 2 are contained in the Folder named "Extended".
-
 
 [Country] = DE,FR,IT,SP (*) with MacBook Air 2022 M2 
 
