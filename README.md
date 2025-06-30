@@ -1,11 +1,11 @@
 ```text
 TITLE: "Media Bias and Polarization through the Lens of a Markov Switching Latent Space Network Model"
 
-AUTHORS:      ..........
+AUTHORS:      Roberto Casarin, Antonio Peruzzi, Mark FJ Steel
 
-AVAILABLE AT:    ..........
+AVAILABLE AT:    The Annals of Applied Statistics
 
-PLEASE CITE AS:   ..........
+PLEASE CITE AS:   (forthcoming)
 
 DATE:        OCTOBER 2024
 
