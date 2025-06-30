@@ -66,7 +66,7 @@ Running time ~13 mins
 The following R scripts files allow us to plot the Figures of a MS-LS model with D = 1 and K = 2:
 
 * Graph_01.R
-Generates the introductory Graph reported in Figure 1
+Generates the introductory Graph reported in Figure 1 and Figure 2
 
 * Properties_01.R
 Generates the contour plots reported in Figure I.1
