@@ -14,10 +14,14 @@ library(ggpubr)
 library(ggpmisc)
 library(lubridate)
 
-load("/Extended/Data/dates.RData")
-load("/Extended/Data/plot_df_fr.RData")
-load("/Extended/Data/xi_fr_agg_fr.RData")
-load("/Extended/Data/EY_fr.RData")
+#################################################
+setwd("~/Downloads/Dyn-MS-LS-Media-main/")
+#################################################
+
+load("Extended/Data/dates.RData")
+load("Extended/Data/plot_df_fr.RData")
+load("Extended/Data/xi_fr_agg_fr.RData")
+load("Extended/Data/EY_fr.RData")
 
  K= 5
 
@@ -83,9 +87,9 @@ gv_fr <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = uni
 save(EY , file = "EY_fr.RData")
 ##########################
 
-load("/Extended/Data/plot_df_de.RData")
-load("/Extended/Data/xi_fr_agg_de.RData")
-load("/Extended/Data/EY_de.RData")
+load("Extended/Data/plot_df_de.RData")
+load("Extended/Data/xi_fr_agg_de.RData")
+load("Extended/Data/EY_de.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
@@ -148,9 +152,9 @@ gv_de <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = uni
 
 
 #####################################
-load("/Extended/Data/plot_df_it.RData")
-load("/Extended/Data/xi_fr_agg_it.RData")
-load("/Extended/Data/EY_it.RData")
+load("Extended/Data/plot_df_it.RData")
+load("Extended/Data/xi_fr_agg_it.RData")
+load("Extended/Data/EY_it.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
@@ -211,9 +215,9 @@ q2<-q
 gv_it <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = unit(c(0,0,-0.1,0), "cm"),)
 
 #####################################
-load("/Extended/Data/plot_df_sp.RData")
-load("/Extended/Data/xi_fr_agg_sp.RData")
-load("/Extended/Data/EY_sp.RData")
+load("Extended/Data/plot_df_sp.RData")
+load("Extended/Data/xi_fr_agg_sp.RData")
+load("Extended/Data/EY_sp.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
@@ -296,4 +300,4 @@ hh<- (gv_fr|gv_de)/(gv_it|gv_sp) & theme(legend.position="none", plot.title = el
 hh
 
 
-ggsave(hh, filename = paste0("Extended/Figures/Figure11.pdf"), units = "cm", width = 16*2, height = 9*2 )
+ggsave(hh, filename = paste0("Figures/Extended/Figure11.pdf"), units = "cm", width = 16*2, height = 9*2 )
