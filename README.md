@@ -337,4 +337,70 @@ Node i and node j at time t for t = 1:Time
 An illustrative sample is available following the path Data/TextAnalysis-SlantIndex/Italy
 
 -------------------------------------------------------------------------------
+
+        %%%%%%%%%%%%%%  EXTENDED  %%%%%%%%%%%%%%
+
+-------------------------------------------------------------------------------
+
+The "Extended" folder contains C++ and R scripts designed to estimate the MS-LS model
+in a more flexible setting, allowing for an arbitrary number of Markov states \( K \) and latent dimensions \( D \).
+
+This version is suitable for more complex applications, such as higher-dimensional embeddings of media outlets
+or the presence of more than two polarization regimes. It generalizes the basic version described above
+ and requires careful tuning of prior and proposal parameters.
+
+The main C++ script for the extended model is:
+
+* Extended_MS_LS_FE.cpp  
+  Contains the MCMC function for estimating the Bayesian MS-LS model with flexible dimension \( D \) and number of regimes \( K \).  
+  Integrated into R via **Rcpp**.
+
+**FUNCTION SIGNATURE**  
+Below is the complete signature of the MCMC function implemented in this script:
+
+result = MCMC(princ_w = EL_princ$w, ........................# edge weights from the network triangle dataset
+              princ_ones = EL_princ$ones,...................# vector of ones from the triangle dataset
+              x_w = EL_x$w,.................................# edge weights from the network off-diagonal dataset
+              x_ones = EL_x$ones,,..........................# vector of ones from the off-diagonal dataset
+              leaning = DBplane$leaning,................... # text analysis leaning (media slant index)
+              lam_ad_beta = lam_ad_beta,....................# adaptive RW-MH lambda - individual effects
+              mu_mat_beta = mu_mat_beta,....................# adaptive RW-MH mu - individual effects
+              Sigma_ad_beta = Sigma_ad_beta,................# adaptive RW-MH sigma - individual effects
+              lam_ad_z = lam_ad_z,..........................# adaptive RW-MH lambda - latent positions
+              mu_mat_z = mu_mat_z,..........................# adaptive RW-MH mu - latent positions
+              Sigma_ad_z = Sigma_ad_z,......................# adaptive RW-MH sigma - latent positions
+              beta = rnorm(Npages, 0 , 0.01),...............# starting value - individual effects
+              xi_state = as.matrix(xi[, 1:K]),..............# starting regime assignments
+              zi_in = zi,...................................# starting value - latent positions (array N x D)
+              mu_beta = 0, .................................# prior mean - individual effect
+              sigma_beta = 15,..............................# prior sd - individual effect
+              mu_z = rep(0, D),.............................# prior mean - latent coordinates
+              sigma_z = rep(10, K),........................ # prior sd - latent coordinates for each regime
+              s_a = 0.01, s_b = 0.01,.......................# prior shape and rate parameters for latent coordinate variance
+              phi = 50,.....................................# starting value - phi
+              gamma_0 = 0, gamma_1 = 1,.....................# starting values - gamma parameters
+              a_phi = a_phi, b_phi = b_phi,.................# prior hyperparameters for phi
+              a_gamma_0 = 0, b_gamma_0 = 15,................# prior hyperparameters for gamma_0
+              a_gamma_1 = 0, b_gamma_1 = 15,................# prior hyperparameters for gamma_1
+              omega = rep(1/K, K),..........................# initial state probabilities (Dirichlet)
+              P = P,........................................# K x K transition matrix
+              N = Npages,...................................# number of nodes
+              D = D,........................................# latent space dimension
+              K = K,........................................# number of Markov regimes
+              Time = Time,..................................# number of time periods
+              x_i = EL_x$ith,...............................# index vector of nodes in EL_x
+              DBplane_i = DBplane$i,........................# index vector of nodes in DBplane
+              prop_sd_gamma = 0.01,.........................# RW-MH proposal sd for gamma parameters
+              prop_sd_phi = 10,.............................# RW-MH proposal sd for phi
+              acc_beta = 0.25,..............................# target acceptance - individual effects
+              acc_zeta = 0.25...............................# target acceptance - latent positions
+              pivot = which(pages_names == "xx"),...........# pivot node for identification
+              sign = 1,.....................................# sign for identification constraint
+              interp_eq = 1,................................# include interpretation equation (0/1)
+              ms_eq = 1,....................................# include Markov-switching dynamics (0/1)
+              rg_eq = 0,................................... # graph model choice (0/1/2)
+              Iterations = Iterations,......................# number of MCMC iterations
+)
+
+
 ```
