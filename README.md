@@ -346,8 +346,7 @@ The "Extended" folder contains C++ and R scripts designed to estimate the MS-LS 
 in a more flexible setting, allowing for an arbitrary number of Markov states \( K \) and latent dimensions \( D \).
 
 This version is suitable for more complex applications, such as higher-dimensional embeddings of media outlets
-or the presence of more than two polarization regimes. It generalizes the basic version described above
- and requires careful tuning of prior and proposal parameters.
+or the presence of more than two polarization regimes. It generalizes the basic version described above.
 
 The main C++ script for the extended model is:
 
