@@ -14,10 +14,11 @@ library(ggpubr)
 library(ggpmisc)
 library(lubridate)
 
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/dates.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/plot_df_fr.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/xi_fr_agg_fr.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/EY_fr.RData")
+load("/Extended/Data/dates.RData")
+load("/Extended/Data/plot_df_fr.RData")
+load("/Extended/Data/xi_fr_agg_fr.RData")
+load("/Extended/Data/EY_fr.RData")
+
  K= 5
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
@@ -82,9 +83,9 @@ gv_fr <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = uni
 save(EY , file = "EY_fr.RData")
 ##########################
 
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/plot_df_de.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/xi_fr_agg_de.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/EY_de.RData")
+load("/Extended/Data/plot_df_de.RData")
+load("/Extended/Data/xi_fr_agg_de.RData")
+load("/Extended/Data/EY_de.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
@@ -147,9 +148,9 @@ gv_de <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = uni
 
 
 #####################################
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/plot_df_it.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/xi_fr_agg_it.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/EY_it.RData")
+load("/Extended/Data/plot_df_it.RData")
+load("/Extended/Data/xi_fr_agg_it.RData")
+load("/Extended/Data/EY_it.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
@@ -210,9 +211,9 @@ q2<-q
 gv_it <- (q1 / q2)  +  plot_layout(heights = c(4, 1)) #& theme(plot.margin = unit(c(0,0,-0.1,0), "cm"),)
 
 #####################################
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/plot_df_sp.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/xi_fr_agg_sp.RData")
-load("~/Documents/GitHub-BayesianEcon/Extended-Dyn-MS-LS-Media/EY_sp.RData")
+load("/Extended/Data/plot_df_sp.RData")
+load("/Extended/Data/xi_fr_agg_sp.RData")
+load("/Extended/Data/EY_sp.RData")
 
 q <- ggplot(plot_df, aes(x = Time, y = Value, group = Time, color = State)) +
   geom_boxplot(
