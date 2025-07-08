@@ -410,5 +410,5 @@ ridge <- ggplot(count_list, aes(x = x, y = factor(ym))) +
   )
 ridge
 
-ggsave(ridge, file = "Figure2.pdf", unit = "cm", width = 16*2, height = 9)
+ggsave(ridge, file = "Figures/Graph/Figure2.pdf", unit = "cm", width = 16*2, height = 9)
 
