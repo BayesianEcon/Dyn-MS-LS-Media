@@ -4,7 +4,7 @@ rm(list = ls())
 #load the libraries
 
 list.of.packages <- c("lubridate", "plyr", "data.table", "ggplot2", "igraph", "dplyr", "scales", "grid",
-                      "ggraph","ggiraphExtra","ggtext","ggnewscale","tidygraph", "ggpmisc", "patchwork")
+                      "ggraph","ggiraphExtra","ggtext","ggnewscale","tidygraph", "ggpmisc", "patchwork", "ggridges")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, type = "binary")
 
@@ -25,6 +25,7 @@ library(ggnewscale)
 library(tidygraph)
 library(ggpmisc)
 library(patchwork)
+library(ggridges)
 
 ########CHANGE YOUR PATH ###########
 setwd("~/Desktop/Repository/")
@@ -365,3 +366,49 @@ resa
 
 
 ggsave(resa, file ="Figures/Graph/Figure1.pdf", unit = "cm", width = 16*2, height = 9*2)
+
+
+library(ggplot2)
+library(ggridges)
+library(ggdist)
+
+tabs<-data.frame(aggregate(count_list$x, by =  list(ym=count_list$ym), FUN = median))
+
+ridge <- ggplot(count_list, aes(x = x, y = factor(ym))) +
+  geom_density_ridges(
+    scale = 1.2, rel_min_height = 0.01,
+    fill = "grey70", color = "black", alpha = 0.5
+  ) +
+  stat_summary( width=0.3, linewidth = 1.2, col = "black",fun.min = function(z) { quantile(z,0.25) },
+                fun.max = function(z) { quantile(z,0.75) },
+                fun = median, geom = "errorbar") +
+  geom_point(
+    data = tabs, 
+    aes(x = x, y = factor(ym), group = 1), 
+    color = "black", shape = 21, fill = "white", size = 2.5
+  ) +
+  labs(title = "", x = "Text-based Leaning") +
+  scale_y_discrete(labels = my_custom_labels) +
+  coord_flip() + 
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "italic", size = 16),
+    plot.subtitle = element_text(face = "italic", size = 12),
+    strip.text.x = element_text(size = 12, face = "bold"),
+    axis.title = element_text(face = "italic", size = 12),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.ticks = element_line(),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(),
+    legend.title = element_text(face = "italic", size = 12),
+    legend.text = element_text(size = 8)
+  )
+ridge
+
+ggsave(ridge, file = "Figure2.pdf", unit = "cm", width = 16*2, height = 9)
+
